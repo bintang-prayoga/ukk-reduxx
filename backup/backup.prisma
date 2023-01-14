@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String   @id @default(cuid())
+    email     String   @unique
+    password  String 
+    name      String
+    isSuper  Boolean  @default(false)
+    isAdmin  Boolean  @default(false)
+    createdAt DateTime @default(now())
+    chapter Chapter_on_User[]
+    favorites Favorite[]
+}
+
+model Favorite {
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  manga Manga @relation(fields: [mangaId], references: [id])
+  mangaId String
+
+  @@id([userId, mangaId])
+}
+
+model Manga {
+    id        String      @id @default(cuid())
+    title String 
+    synopsis String
+    author String
+    artist String
+    coverArt String
+    favorite Favorite[]
+    genre Genre_on_Manga[]
+    chapters Chapter[]
+}
+
+model Genre {
+  id        String      @id @default(cuid())
+  name String
+  manga Genre_on_Manga[]
+}
+
+model Chapter {
+  id        String      @id @default(cuid())
+  manga Manga @relation(fields: [mangaId], references: [id])
+  mangaId String
+  title String
+  chapNum Int
+  createdAt DateTime @default(now())
+  images Images_on_Chapter[]
+  user Chapter_on_User[]
+}
+
+model Images {
+  id        String      @id @default(cuid())
+  url String
+  chapter Images_on_Chapter[]
+}
+
+model Chapter_on_User {
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  chapterId String
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  
+  @@id([chapterId, userId])
+}
+
+model Images_on_Chapter {
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  chapterId String
+  images Images @relation(fields: [imagesId], references: [id])
+  imagesId String
+  
+  @@id([chapterId, imagesId])
+}
+
+model Genre_on_Manga {
+  manga Manga @relation(fields: [mangaId], references: [id])
+  mangaId String
+  genre Genre @relation(fields: [genreId], references: [id])
+  genreId String
+  
+  @@id([mangaId, genreId])
+}

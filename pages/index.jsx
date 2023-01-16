@@ -2,27 +2,26 @@ import Link from "next/link";
 import Hero from "../Components/Hero";
 import UserLayout from "../Layout/UserLayout";
 import { FiUser } from "react-icons/fi";
-import { MangaContext, MangaProvider } from "../Context/MangaContext";
-import { MangaData } from "../Dummy/MangaData";
+import { ComicContext, ComicProvider } from "../Context/ComicContext";
 import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
-import getManga from "./api/Manga/getManga";
-import getFeatured from "./api/Manga/getFeatured";
+import getComic from "./api/Comic/getComic";
+import getFeatured from "./api/Comic/getFeatured";
 
 export async function getServerSideProps() {
-  const manga = await getManga();
+  const comic = await getComic();
   const featured = await getFeatured();
   return {
     props: {
-      manga: manga,
+      comic: comic,
       featured: featured,
     },
   };
 }
 
-export default function Home({ manga, featured }) {
+export default function Home({ comic, featured }) {
   useEffect(() => {
-    console.log(manga);
+    console.log(comic);
   }, []);
 
   return (
@@ -38,7 +37,7 @@ export default function Home({ manga, featured }) {
           Latest Update
         </h1>
         <div className="grid gap-x-6 grid-cols-1 lg:grid-cols-2 bg-zinc-700 rounded-md">
-          {manga.map((item, index) => (
+          {comic.map((item, index) => (
             <div className="grid gap-4 p-4" key={index}>
               <Link href={`/titles/${item.id}`} key={index}>
                 <div className="flex gap-2 cursor-pointer">

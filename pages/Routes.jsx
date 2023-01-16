@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FaHome, FaStar } from "react-icons/fa";
-import { MdUpdate } from "react-icons/md";
+import { MdUpdate, MdEditNote } from "react-icons/md";
 import { Fragment, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 
@@ -19,14 +19,14 @@ function Routes({ sidenav, setSideNav }) {
 
   return (
     <Transition.Root show={false || sidenav} as={Fragment}>
-      <div className="md:w-[230px] w-screen h-full z-10 absolute md:relative">
+      <div className="md:w-[230px] w-screen h-screen z-10 absolute md:relative">
         <div
-          className={`absolute -z-10 w-full h-full bg-opacity-50`}
+          className={`absolute -z-10 w-full h-full bg-zinc-900 bg-opacity-50`}
           onClick={() => setSideNav(false)}
         ></div>
         <div
           id="navigation"
-          className={`w-[230px] h-full md:flex flex-col justify-between p-3 absolute`}
+          className={`bg-zinc-900 w-[230px] h-full md:flex flex-col justify-between p-3 absolute`}
         >
           <div className="nav-menu">
             <nav>
@@ -56,15 +56,44 @@ function Routes({ sidenav, setSideNav }) {
                     </li>
                   </a>
                 </Link>
-                <Link href="/updates">
+                <Link href="/favorites">
                   <a>
                     <li
                       className={
-                        router.pathname === "/updates" ? activeNav : defaultNav
+                        router.pathname === "/favorites"
+                          ? activeNav
+                          : defaultNav
                       }
                     >
                       <FaStar className="mr-4" />
                       <span>Favorites</span>
+                    </li>
+                  </a>
+                </Link>
+                <li className="mt-4  text-xl">Admin</li>
+                <Link href="/admin">
+                  <a>
+                    <li
+                      className={
+                        router.pathname === "/admin" ? activeNav : defaultNav
+                      }
+                    >
+                      <FaHome className="mr-4" />
+                      <span>Admin</span>
+                    </li>
+                  </a>
+                </Link>
+                <Link href="/admin/drafts">
+                  <a>
+                    <li
+                      className={
+                        router.pathname === "/admin/drafts"
+                          ? activeNav
+                          : defaultNav
+                      }
+                    >
+                      <MdEditNote className="mr-2 text-2xl" />
+                      <span>Drafts</span>
                     </li>
                   </a>
                 </Link>

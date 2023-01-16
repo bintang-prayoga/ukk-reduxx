@@ -1,20 +1,20 @@
 import { useEffect, useContext, useState } from "react";
-import { MangaContext } from "../../Context/MangaContext";
+import { ComicContext } from "../../Context/ComicContext";
 import { useRouter } from "next/router";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
-import getSelected from "../api/Manga/getSelected";
+import getSelected from "../api/Comic/getSelected";
 import UserLayout from "../../Layout/UserLayout";
 import Link from "next/link";
 
 export async function getServerSideProps(context) {
-  const manga = await getSelected(context);
+  const comic = await getSelected(context);
 
   return {
     props: {
-      manga: manga,
+      comic: comic,
     },
   };
 }
@@ -46,10 +46,10 @@ export function ReadMore({ text }) {
   );
 }
 
-export default function SingleManga({ manga }) {
-  const { breakpoint, setBreakpoint } = useContext(MangaContext);
+export default function SingleComic({ comic }) {
+  const { breakpoint, setBreakpoint } = useContext(ComicContext);
   const [ascend, setAscend] = useState(() => true);
-  const [related, setRelated] = useState(() => manga.genres);
+  const [related, setRelated] = useState(() => comic.genres);
 
   function limitRelated() {
     setRelated(related.slice(0, 5));
@@ -85,7 +85,7 @@ export default function SingleManga({ manga }) {
       <div className="">
         <div
           className="bg-top bg-cover"
-          style={{ backgroundImage: `url(${manga.coverArt})` }}
+          style={{ backgroundImage: `url(${comic.coverArt})` }}
         ></div>
         <div
           className={`grid ${
@@ -94,17 +94,17 @@ export default function SingleManga({ manga }) {
         >
           <div className="mx-auto">
             <img
-              src={manga.coverArt}
+              src={comic.coverArt}
               className="rounded shadow-md max-w-[21rem] max-h-[31rem]"
             />
           </div>
           <div className="flex flex-col gap-4 px-5 col-span-2">
             <div className="mt-2">
-              <h1 className="text-5xl font-bold">{manga.title}</h1>
-              <p className="text-lg font-medium my-4">{manga.author}</p>
+              <h1 className="text-5xl font-bold">{comic.title}</h1>
+              <p className="text-lg font-medium my-4">{comic.author}</p>
             </div>
             <div className="flex">
-              {manga.genres.map((genre, index) => (
+              {comic.genres.map((genre, index) => (
                 <p
                   className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1"
                   key={index}
@@ -114,9 +114,9 @@ export default function SingleManga({ manga }) {
               ))}
             </div>
             {breakpoint <= 2 ? (
-              <ReadMore text={manga.synopsis} />
+              <ReadMore text={comic.synopsis} />
             ) : (
-              <p className="text-lg">{manga.synopsis}</p>
+              <p className="text-lg">{comic.synopsis}</p>
             )}
             <div>
               <button className="bg-cyan-500 px-5 py-2 rounded-md flex flex-row">
@@ -155,7 +155,7 @@ export default function SingleManga({ manga }) {
               )}
             </button>
           </div>
-          {manga.genres.map((genre, index) => (
+          {comic.genres.map((genre, index) => (
             <Link href={``} key={index}>
               <div className="border-l-2 border-l-cyan-500 bg-zinc-900 rounded-tr-md rounded-br-md cursor-pointer">
                 <div className="mx-2 my-2">
@@ -172,18 +172,18 @@ export default function SingleManga({ manga }) {
         <div className="flex flex-col gap-4 mx-5">
           <div className="max-w-sm p-6 bg-slate-600 border border-cyan-500 rounded-lg shadow-md ">
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-200">
-              Related Manga
+              Related comic
             </h5>
             <div className="mb-3">
               {related.map((genre, index) => (
                 <Link href={`/titles/`} key={index}>
                   <div className="flex gap-2 my-2 cursor-pointer">
                     <img
-                      src={manga.coverArt}
+                      src={comic.coverArt}
                       className="rounded shadow-md max-w-[4rem] max-h-[5rem]"
                     />
                     <div className="">
-                      <h1 className="text-sm font-semibold">{manga.title}</h1>
+                      <h1 className="text-sm font-semibold">{comic.title}</h1>
                       <p className="tracking-tight text-xs">
                         Ch. 10 - Childhood Friends, And...?
                       </p>
@@ -203,6 +203,6 @@ export default function SingleManga({ manga }) {
   );
 }
 
-SingleManga.getLayout = function getLayout(page) {
+SingleComic.getLayout = function getLayout(page) {
   return UserLayout.getLayout(page);
 };

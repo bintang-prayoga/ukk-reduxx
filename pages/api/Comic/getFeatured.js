@@ -1,7 +1,7 @@
 import prisma from "../prisma";
 
 export default async function getFeatured(req, res) {
-  const featuredManga = await prisma.manga.findMany({
+  const featuredComic = await prisma.comic.findMany({
     include: {
       genres: true,
     },
@@ -10,5 +10,5 @@ export default async function getFeatured(req, res) {
     },
   });
 
-  return featuredManga;
+  return featuredComic;
 }

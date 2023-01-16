@@ -1,12 +1,35 @@
 import { useContext, useEffect, useState } from "react";
-import { MangaContext } from "../Context/MangaContext";
+import { ComicContext } from "../Context/ComicContext";
 import { Carousel } from "flowbite-react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import Link from "next/link";
 
+export function DisplayGenre({ genre, index }) {
+  if (index < 4) {
+    return (
+      <p
+        className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 uppercase mx-1"
+        key={index}
+      >
+        {genre.name}
+      </p>
+    );
+  } else {
+    return null;
+  }
+}
+
+export function DisplaySynopsis({ synopsis, breakpoint }) {
+  return (
+    <p className={`mt-5 ${breakpoint <= 3 ? "hidden" : ""}`}>
+      {comic.synopsis}
+    </p>
+  );
+}
+
 function Hero({ featured }) {
-  const { breakpoint, setBreakpoint } = useContext(MangaContext);
+  const { breakpoint, setBreakpoint } = useContext(ComicContext);
 
   function getBreakpoint() {
     const width = Math.max(
@@ -39,8 +62,8 @@ function Hero({ featured }) {
         rightControl={<FaChevronRight />}
         leftControl={<FaChevronLeft />}
       >
-        {featured.map((manga, index) => (
-          <Link href={`/titles/${manga.id}`} key={index}>
+        {featured.map((comic, index) => (
+          <Link href={`/titles/${comic.id}`} key={index}>
             <div className="flex h-full items-center justify-center py-2 w-5/6 mx-auto">
               <div
                 className={`grid ${
@@ -49,7 +72,7 @@ function Hero({ featured }) {
               >
                 <div className="mx-auto col-span-1">
                   <img
-                    src={manga.coverArt}
+                    src={comic.coverArt}
                     className="max-h-[10rem]
                     sm:max-h-[calc(300px-4rem)]
                     max-w-[10rem]
@@ -64,22 +87,22 @@ function Hero({ featured }) {
                   <h1
                     className={`text-white font-semibold text-2xl text-center md:text-center lg:text-left md:text-3xl `}
                   >
-                    {manga.title}
+                    {comic.title}
                   </h1>
                   <div className="flex my-2">
                     <div className="flex mx-auto lg:mx-0">
-                      {manga.genres.map((genre, index) => (
-                        <p
-                          className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 uppercase mx-1"
-                          key={index}
-                        >
-                          {genre.name}
-                        </p>
+                      {comic.genres.map((genre, index) => (
+                        <DisplayGenre genre={genre} key={index} index={index} />
                       ))}
                     </div>
                   </div>
                   <p className={`mt-5 ${breakpoint <= 3 ? "hidden" : ""}`}>
-                    {manga.synopsis}
+                    {comic.synopsis.slice(0, 250)}
+                  </p>
+                  <p className="mt-5 font-semibold">
+                    {comic.author === comic.artist
+                      ? comic.author
+                      : `${comic.author}, ${comic.artist}`}
                   </p>
                 </div>
               </div>

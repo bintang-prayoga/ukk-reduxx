@@ -5,7 +5,7 @@ function UserLayout({ children }) {
   return (
     <>
       <Head>
-        <title>BoedNoManga</title>
+        <title>BoedNoComic</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export default async function postFavorite(req, res) {
   const { id } = req.query;
   const { userId } = req.body;
-  const addedManga = await prisma.user.update({
+  const addedComic = await prisma.user.update({
     where: {
       id: userId,
     },
@@ -17,10 +17,10 @@ export default async function postFavorite(req, res) {
       },
     },
   });
-  return addedManga;
+  return addedComic;
 }
 
-// api  function to remove a manga from the user's favorites
+// api  function to remove a Comic from the user's favorites
 //
 // import { PrismaClient } from "@prisma/client";
 //
@@ -29,7 +29,7 @@ export default async function postFavorite(req, res) {
 // export default async function deleteFavorite(req, res) {
 //   const { id } = req.query;
 //   const { userId } = req.body;
-//   const removedManga = await prisma.user.update({
+//   const removedComic = await prisma.user.update({
 //     where: {
 //       id: userId,
 //     },
@@ -41,7 +41,7 @@ export default async function postFavorite(req, res) {
 //       },
 //     },
 //   });
-//   return removedManga;
+//   return removedComic;
 // }
 //
 // api  function to get the user's favorites

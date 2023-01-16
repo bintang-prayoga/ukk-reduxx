@@ -19,7 +19,7 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-model Manga {
+model Comic {
   id        String   @default(cuid()) @id
   title     String
   synopsis  String
@@ -37,27 +37,30 @@ model Manga {
 model Favorite {
   id        String   @default(cuid()) @id
   user      User     @relation(fields: [userId], references: [id])
-  manga    Manga    @relation(fields: [mangaId], references: [id])
+  comic     Comic    @relation(fields: [comicId], references: [id])
   userId    String
-  mangaId   String
+  comicId   String
 }
 
 model Genre {
   id        String   @default(cuid()) @id
   name      String
-  manga     Manga[]
+  comic     Comic[]
 }
 
 model Chapters {
   id        String   @default(cuid()) @id
-  manga Manga @relation(fields: [mangaId], references: [id])
-  mangaId   String
+  comic Comic @relation(fields: [comicId], references: [id])
+  comicId   String
   title     String
   chapNum   Int
+  images    Images[]
   createdAt DateTime @default(now())
 }
 
 model Images {
   id        String      @id @default(cuid())
+  chapter Chapters @relation(fields: [chapterId], references: [id])
+  chapterId String
   url       String
 }

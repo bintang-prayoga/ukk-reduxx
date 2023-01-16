@@ -1,8 +1,8 @@
 import { createContext, useState } from "react";
 
-export const MangaContext = createContext("");
+export const ComicContext = createContext("");
 
-export function MangaProvider({ children }) {
+export function ComicProvider({ children }) {
   const [breakpoint, setBreakpoint] = useState(() => 0);
 
   function getBreakpoint() {
@@ -16,8 +16,8 @@ export function MangaProvider({ children }) {
   }
 
   return (
-    <MangaContext.Provider value={{ breakpoint, setBreakpoint }}>
+    <ComicContext.Provider value={{ breakpoint, setBreakpoint }}>
       {children}
-    </MangaContext.Provider>
+    </ComicContext.Provider>
   );
 }

@@ -1,11 +1,11 @@
 import "../styles/globals.css";
-import { MangaProvider } from "../Context/MangaContext";
+import { ComicProvider } from "../Context/ComicContext";
 
 function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <MangaProvider>{getLayout(<Component {...pageProps} />)}</MangaProvider>
+    <ComicProvider>{getLayout(<Component {...pageProps} />)}</ComicProvider>
   );
 }
 

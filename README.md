@@ -1,27 +1,34 @@
-# Next.js + Tailwind CSS Example
+# SI Baca Komik
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+## PERINGATAN
+#### Project ini tidak bisa untuk dijadikan project UKK jika tidak dikembangkan
 
-## Deploy your own
+# Tech Stacks
+- <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+- <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" />
+- <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+- <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
-
+## Instalasi
+#### With `NPM`
 ```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
+npx install
 ```
 
+#### With `PNPM`
 ```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
+pnpx install
 ```
 
+## Konfigurasi dengan `env.example` yang ada
+
+## Menjalankan
+#### With `NPM`
 ```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
+npm run dev
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+#### With `PNPM`
+```bash
+pnpm run dev
+```

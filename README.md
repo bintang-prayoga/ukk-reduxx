@@ -1,6 +1,6 @@
 # SI Baca Komik
 
-## PERINGATAN
+## ❗ PERINGATAN ❗
 #### Project ini tidak bisa untuk dijadikan project UKK jika tidak dikembangkan
 
 # Tech Stacks

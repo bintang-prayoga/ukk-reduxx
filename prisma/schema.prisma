@@ -12,34 +12,30 @@ model User {
   email     String   @unique
   name      String
   password  String
-  favorite  Favorite[]
-  isAdmin   Boolean  @default(false)
-  isSuper   Boolean  @default(false)
+  image     String?
+  role      String   @default("user")
+  bookmarks Comic[] @relation("bookmarks")
+  createdComic Comic[] @relation("createdComic")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Comic {
   id        String   @default(cuid()) @id
-  title     String
+  title     String   @unique
+  slug      String?   @unique
   synopsis  String
   author    String
   artist    String
-  coverArt  String
+  coverArt  String?
   status    String
-  release   String
-  featured  Boolean  @default(false)
-  favorites Favorite[]
+  publication   String
+  bookmarks User[] @relation("bookmarks")
+  createdBy User[] @relation("createdComic")
   genres    Genre[]
   chapters  Chapters[]
-}
-
-model Favorite {
-  id        String   @default(cuid()) @id
-  user      User     @relation(fields: [userId], references: [id])
-  comic     Comic    @relation(fields: [comicId], references: [id])
-  userId    String
-  comicId   String
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model Genre {
@@ -59,8 +55,10 @@ model Chapters {
 }
 
 model Images {
-  id        String      @id @default(cuid())
-  chapter Chapters @relation(fields: [chapterId], references: [id])
+  chapter Chapters      @relation(fields: [chapterId], references: [id])
   chapterId String
+  pageNum   Int
   url       String
+
+  @@id([chapterId, pageNum])
 }

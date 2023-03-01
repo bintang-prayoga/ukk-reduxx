@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Comic" ALTER COLUMN "slug" DROP NOT NULL;

@@ -1,39 +1,88 @@
-import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth from "next-auth/next";
+import prisma from "../prisma";
 import bcrypt from "bcrypt";
-import { PrismaClient } from "@prisma/client";
 
-export const authOptions = {
+export default NextAuth({
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "text", placeholder: "" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        const dbUser = await prisma.user.findUnique({
+      async authorize(credentials) {
+        const user = await prisma.user.findUnique({
           where: {
-            email: credentials.username,
+            email: credentials.email,
           },
         });
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
+        if (!user) {
+          throw new Error("User Not Found");
         } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          const isValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+          if (!isValid) {
+            throw new Error("Password Or Email Is Incorrect");
+          } else {
+            return user;
+          }
         }
       },
     }),
   ],
-};
+  callbacks: {
+    async session({ session }) {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: session.user.email,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          image: true,
+          role: true,
+          createdComic: {
+            select: {
+              id: true,
+              slug: true,
+              title: true,
+            },
+          },
+          bookmarks: {
+            include: {
+              genres: true,
+            },
+          },
+        },
+      });
+      const allComic = await prisma.comic.findMany({
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          genres: true,
+          coverArt: true,
+          status: true,
+          publication: true,
+          createdBy: true,
+          synopsis: true,
+          author: true,
+          artist: true,
+          featured: true,
+          chapters: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      session.user = user;
+      session.allComic = allComic;
+      return session;
+    },
+  },
+});

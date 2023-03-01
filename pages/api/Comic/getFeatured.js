@@ -10,5 +10,5 @@ export default async function getFeatured(req, res) {
     },
   });
 
-  return featuredComic;
+  return JSON.parse(JSON.stringify(featuredComic));
 }

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Images" ALTER COLUMN "pageNum" SET DATA TYPE DECIMAL(65,30);

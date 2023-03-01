@@ -1,14 +1,29 @@
 import prisma from "../prisma";
 
 export default async function getSelected(req, res) {
-  const { id } = req.query;
+  const { slug } = req.query;
   const selectedComic = await prisma.comic.findUnique({
     include: {
       genres: true,
+      createdBy: true,
+      chapters: {
+        orderBy: {
+          chapNum: "desc",
+        },
+        include: {
+          images: {
+            orderBy: {
+              pageNum: "asc",
+            },
+          },
+        },
+      },
+      bookmarks: true,
     },
     where: {
-      id: id,
+      slug: slug,
     },
   });
-  return selectedComic;
+
+  return JSON.parse(JSON.stringify(selectedComic));
 }

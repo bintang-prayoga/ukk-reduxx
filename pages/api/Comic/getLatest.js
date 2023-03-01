@@ -1,16 +1,16 @@
 import prisma from "../prisma";
 
-const getLatest = async (req, res) => {
+export default async function getLatest() {
   const latest = await prisma.comic.findMany({
+    skip: 0,
     take: 10,
     orderBy: {
       createdAt: "desc",
     },
-    select: {
-      id: true,
-      title: true,
-      description: true,
-      cover: true,
+    include: {
+      genres: true,
     },
   });
-};
+
+  return JSON.parse(JSON.stringify(latest));
+}

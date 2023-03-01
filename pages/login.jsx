@@ -1,54 +1,65 @@
-import AuthLayout from "../Layout/AuthLayout";
-import Link from "next/link";
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import Link from "next/link";
+import AuthLayout from "./Layout/AuthLayout";
 
 export default function LoginPage() {
-  const [credentials, setCredentials] = useState({
-    email: undefined,
-    password: undefined,
-    valid: false,
+  const [isOpen, setIsOpen] = useState(() => false);
+  const [errorData, setErrorData] = useState({
+    error: false,
+    message: "",
   });
 
-  const [isOpen, setIsOpen] = useState(() => false);
+  const { register, handleSubmit } = useForm();
 
-  function handleSubmit() {
-    // TODO: Handle login
+  async function onSubmit(data) {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+    if (result.error) {
+      setErrorData({
+        error: true,
+        message: result.error,
+      });
+    } else {
+      setTimeout((window.location.href = "/"), 3000);
+    }
   }
 
   return (
     <>
-      <form className="mt-8 space-y-6 text-white" action="#" method="POST">
-        {/* <input type="hidden" name="remember" value="true" /> */}
+      <form
+        className="mt-8 space-y-6 text-white"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="relative">
-          <label className="text-sm font-bold tracking-wide">Email</label>
+          <div className="flex">
+            <label className="text-sm font-bold tracking-wide">Email</label>
+            {errorData.error && (
+              <label className="text-red-500 text-sm mx-3 ">
+                {errorData.message}
+              </label>
+            )}
+          </div>
           <input
-            className=" bg-zinc-800 w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-cyan-500 rounded-t-md"
+            {...register("email", { required: true })}
+            className=" bg-zinc-800 w-full text-base py-2 border-b border-gray-300 focus:outline-none focus:border-cyan-500 rounded-md"
             type="email"
             placeholder="Enter Your Email"
-            onChange={({ target }) =>
-              setCredentials((prev) => ({
-                ...prev,
-                email: target.value,
-                valid: prev.password?.length > 0 && target.value.length > 0,
-              }))
-            }
           />
         </div>
         <div className="mt-8 content-center">
           <label className="text-sm font-bold tracking-wide">Password</label>
           <div className="flex flex-row items-center">
             <input
-              className="bg-zinc-800 w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-cyan-500 rounded-t-md"
+              {...register("password", { required: true })}
+              className="bg-zinc-800 w-full content-center text-base py-2 border-b border-gray-300 focus:outline-none focus:border-cyan-500 rounded-md"
               type={isOpen ? "text" : "password"}
               placeholder="Enter your password"
-              onChange={({ target }) =>
-                setCredentials((prev) => ({
-                  ...prev,
-                  password: target.value,
-                  valid: prev.email?.length > 0 && target.value.length > 0,
-                }))
-              }
             />
             <div
               className={`
@@ -56,15 +67,16 @@ export default function LoginPage() {
               onClick={() => setIsOpen(() => !isOpen)}
             >
               {isOpen ? (
-                <FiEyeOff className="my-2" />
+                <FiEyeOff className="my-2 ml-2" />
               ) : (
-                <FiEye className="my-2" />
+                <FiEye className="my-2 ml-2" />
               )}
             </div>
           </div>
         </div>
         <div>
           <button
+            onClick={() => {}}
             type="submit"
             className="w-full flex justify-center bg-cyan-600 text-gray-100 p-4  rounded-full tracking-wide
                                 font-semibold  focus:outline-none focus:shadow-outline hover:bg-cyan-700 shadow-lg cursor-pointer transition ease-in duration-300"
@@ -72,14 +84,14 @@ export default function LoginPage() {
             Sign in
           </button>
         </div>
-        <p className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-300">
+        <div className="flex flex-col items-center justify-center mt-10 text-center text-md text-gray-300">
           <span>Don't have an account?</span>
           <Link href="/signup">
             <p className="text-cyan-600 hover:text-cyan-700 no-underline hover:underline cursor-pointer transition ease-in duration-300">
               Sign up
             </p>
           </Link>
-        </p>
+        </div>
       </form>
     </>
   );

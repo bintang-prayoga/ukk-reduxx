@@ -5,103 +5,100 @@ const prisma = new PrismaClient();
 const salt = bcrypt.genSaltSync(10);
 
 async function main() {
-  // const BoedNoSuper = await prisma.user.create({
-  //   data: {
-  //     name: "BoedNoNiwa",
-  //     email: "dukunas12@gmail.com",
-  //     password: bcrypt.hashSync("123456", salt),
-  //     isAdmin: true,
-  //     isSuper: true,
-  //   },
-  // });
-  // const BoedNoAdmin = await prisma.user.create({
-  //   data: {
-  //     name: "BoedNoAdmin",
-  //     email: "dukunas34@gmail.com",
-  //     password: bcrypt.hashSync("123456", salt),
-  //     isAdmin: true,
-  //     isSuper: false,
-  //   },
-  // });
-  // const BoedNoUser = await prisma.user.create({
-  //   data: {
-  //     name: "BoedNoUser",
-  //     email: "dukunas56@gmail.com",
-  //     password: bcrypt.hashSync("123456", salt),
-  //     isAdmin: false,
-  //     isSuper: false,
-  //   },
-  // });
-  // const genreList = await prisma.genre.createMany({
-  //   data: [
-  //     {
-  //       name: "Action",
-  //     },
-  //     {
-  //       name: "Adventure",
-  //     },
-  //     {
-  //       name: "Comedy",
-  //     },
-  //     {
-  //       name: "Crime",
-  //     },
-  //     {
-  //       name: "Drama",
-  //     },
-  //     {
-  //       name: "Fantasy",
-  //     },
-  //     {
-  //       name: "Historical",
-  //     },
-  //     {
-  //       name: "Horror",
-  //     },
-  //     {
-  //       name: "Isekai",
-  //     },
-  //     {
-  //       name: "Mecha",
-  //     },
-  //     {
-  //       name: "Medical",
-  //     },
-  //     {
-  //       name: "Mystery",
-  //     },
-  //     {
-  //       name: "Philosophical",
-  //     },
-  //     {
-  //       name: "Psychological",
-  //     },
-  //     {
-  //       name: "Romance",
-  //     },
-  //     {
-  //       name: "Sci-Fi",
-  //     },
-  //     {
-  //       name: "Slice Of Life",
-  //     },
-  //     {
-  //       name: "Sports",
-  //     },
-  //     {
-  //       name: "Superhero",
-  //     },
-  //     {
-  //       name: "Thriller",
-  //     },
-  //     {
-  //       name: "Tragedy",
-  //     },
-  //     {
-  //       name: "Wuxia",
-  //     },
-  //   ],
-  // });
+  const BoedNoSuper = await prisma.user.create({
+    data: {
+      name: "BoedNoNiwa",
+      email: "dukunas12@gmail.com",
+      password: bcrypt.hashSync("123456", salt),
+      role: "super",
+    },
+  });
+  const BoedNoAdmin = await prisma.user.create({
+    data: {
+      name: "BoedNoAdmin",
+      email: "dukunas34@gmail.com",
+      password: bcrypt.hashSync("123456", salt),
+      role: "admin",
+    },
+  });
+  const BoedNoUser = await prisma.user.create({
+    data: {
+      name: "BoedNoUser",
+      email: "dukunas56@gmail.com",
+      password: bcrypt.hashSync("123456", salt),
+      role: "user",
+    },
+  });
+  const genreList = await prisma.genre.createMany({
+    data: [
+      {
+        name: "Action",
+      },
+      {
+        name: "Adventure",
+      },
+      {
+        name: "Comedy",
+      },
+      {
+        name: "Crime",
+      },
+      {
+        name: "Drama",
+      },
+      {
+        name: "Fantasy",
+      },
+      {
+        name: "Historical",
+      },
+      {
+        name: "Horror",
+      },
+      {
+        name: "Isekai",
+      },
+      {
+        name: "Mecha",
+      },
+      {
+        name: "Medical",
+      },
+      {
+        name: "Mystery",
+      },
+      {
+        name: "Philosophical",
+      },
+      {
+        name: "Psychological",
+      },
+      {
+        name: "Romance",
+      },
+      {
+        name: "Sci-Fi",
+      },
+      {
+        name: "Slice Of Life",
+      },
+      {
+        name: "Sports",
+      },
+      {
+        name: "Superhero",
+      },
+      {
+        name: "Thriller",
+      },
+      {
+        name: "Tragedy",
+      },
+      {
+        name: "Wuxia",
+      },
+    ],
+  });
 }
 
 const comicList = await prisma.comic.createMany({
@@ -215,17 +212,6 @@ const comicList = await prisma.comic.createMany({
       publication: "2015",
       coverArt:
         "https://res.cloudinary.com/boednocomic/image/upload/v1674663939/coverArt/e1v2hbpzbhhvko2kvasf.jpg",
-    },
-    {
-      title: "Hades",
-      slug: "hades",
-      synopsis: "The nine stages of changes in the deceased remains",
-      author: "My Dead Girlfriend",
-      artist: "My Dead Girlfriend",
-      status: "Hiatus",
-      publication: "2015",
-      coverArt:
-        "https://res.cloudinary.com/boednocomic/image/upload/v1674628248/coverArt/v76hl9obtqvdorlgqypc.jpg",
     },
   ],
 });

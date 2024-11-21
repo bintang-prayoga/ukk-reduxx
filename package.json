@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "migrate": "prisma migrate dev",
+    "postmigrate": "npx @snaplet/seed sync"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.9",
@@ -15,6 +17,11 @@
     "@tanstack/react-table": "8.7.9",
     "bcrypt": "^5.1.0",
     "cloudinary-react": "^1.8.1",
+    "filepond": "^4.30.6",
+    "filepond-plugin-file-poster": "^2.5.1",
+    "filepond-plugin-file-validate-type": "^1.2.8",
+    "filepond-plugin-image-exif-orientation": "^1.0.11",
+    "filepond-plugin-image-preview": "^4.6.12",
     "flowbite": "^1.6.3",
     "flowbite-react": "^0.3.8",
     "html-react-parser": "^3.0.8",
@@ -23,6 +30,7 @@
     "next-auth": "^4.19.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-filepond": "^7.1.2",
     "react-hook-form": "^7.43.0",
     "react-icons": "^4.7.1",
     "react-quill": "^2.0.0",

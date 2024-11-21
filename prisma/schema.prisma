@@ -8,57 +8,85 @@ datasource db {
 }
 
 model User {
-  id        String   @default(cuid()) @id
-  email     String   @unique
-  name      String
-  password  String
-  image     String?
-  role      String   @default("user")
-  bookmarks Comic[] @relation("bookmarks")
-  createdComic Comic[] @relation("createdComic")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  password     String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  image        String?
+  role         String   @default("user")
+  Rating       Rating[]
+  Recap        Recap[]
+  bookmarks    Comic[]  @relation("bookmarks")
+  createdComic Comic[]  @relation("createdComic")
 }
 
 model Comic {
-  id        String   @default(cuid()) @id
-  title     String   @unique
-  slug      String?   @unique
-  synopsis  String
-  author    String
-  artist    String
-  coverArt  String?
-  status    String
-  publication   String
-  bookmarks User[] @relation("bookmarks")
-  createdBy User[] @relation("createdComic")
-  genres    Genre[]
-  chapters  Chapters[]
-  featured  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id          String     @id @default(cuid())
+  title       String     @unique
+  synopsis    String
+  author      String
+  artist      String
+  coverArt    String?
+  status      String
+  featured    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  publication String
+  slug        String?    @unique
+  chapters    Chapters[]
+  ratings     Rating[]
+  recaps      Recap[]
+  genres      Genre[]    @relation("ComicToGenre")
+  bookmarks   User[]     @relation("bookmarks")
+  createdBy   User[]     @relation("createdComic")
 }
 
 model Genre {
-  id        String   @default(cuid()) @id
-  name      String
-  comic     Comic[]
+  id    String  @id @default(cuid())
+  name  String
+  comic Comic[] @relation("ComicToGenre")
 }
 
 model Chapters {
-  id        String   @default(cuid()) @id
-  comic Comic @relation(fields: [comicId], references: [id])
-  comicId   String
+  id        String   @id @default(cuid())
   title     String
   chapNum   Int
-  images    Images[]
   createdAt DateTime @default(now())
+  comicId   String
+  comic     Comic    @relation(fields: [comicId], references: [id])
+  images    Images[]
+  recap     Recap[]
 }
 
 model Images {
-  chapter Chapters      @relation(fields: [chapterId], references: [id])
+  url       String
   chapterId String
   pageNum   Int
-  url       String
+  chapter   Chapters @relation(fields: [chapterId], references: [id])
 
   @@id([chapterId, pageNum])
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  comicId   String
+  userId    String
+  score     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comic     Comic    @relation(fields: [comicId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Recap {
+  id        String   @id @default(cuid())
+  comicId   String
+  userId    String
+  chapterId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chapter   Chapters @relation(fields: [chapterId], references: [id])
+  comic     Comic    @relation(fields: [comicId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

@@ -24,7 +24,9 @@ function TitleSearchPage({ genre, latest }) {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [searchResult, setSearchResult] = useState([]);
+  const [resultCon, setResultCon] = useState({
+    isOpen: false,
+  });
   const [latestComic, setLatestComic] = useState(latest);
   const [filter, setFilter] = useState(() => false);
 
@@ -38,12 +40,20 @@ function TitleSearchPage({ genre, latest }) {
         body: JSON.stringify(data),
       }).then((r) => r.json());
       if (searchData.length === 0) {
-        alert("No result found");
+        setResultCon({
+          isOpen: true,
+        });
       } else {
         setLatestComic(searchData);
+        setResultCon({
+          isOpen: false,
+        });
       }
     } else {
       setLatestComic(latest);
+      setResultCon({
+        isOpen: false,
+      });
     }
   }
 
@@ -51,7 +61,7 @@ function TitleSearchPage({ genre, latest }) {
     <>
       <div>
         <h1 className="font-semibold tracking-wide text-2xl">Search Title</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onChange={handleSubmit(onSubmit)}>
           <div className="flex justify-center mt-3">
             <input
               type={`text`}
@@ -106,14 +116,25 @@ function TitleSearchPage({ genre, latest }) {
             </div>
           )}
         </form>
-        <h1 className="font-semibold tracking-wide text-2xl">Result</h1>
-        <div>
-          {latestComic.map((comic, index) => (
-            <div className="bg-zinc-900 rounded-md my-2 cursor-pointer lg:flex w-full hover:bg-slate-800">
-              <Card key={index} index={index} comic={comic} bg="bg-zinc-800" />
-            </div>
-          ))}
-        </div>
+        <h1 className="font-semibold tracking-wide text-2xl my-2">Result</h1>
+        {resultCon.isOpen ? (
+          <div className="bg-red-500 rounded-md my-2">
+            <p className="text-white text-center">No Result Found</p>
+          </div>
+        ) : (
+          <div>
+            {latestComic.map((comic, index) => (
+              <div className="bg-zinc-900 rounded-md my-2 cursor-pointer lg:flex w-full hover:bg-slate-800">
+                <Card
+                  key={index}
+                  index={index}
+                  comic={comic}
+                  bg="bg-zinc-800"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

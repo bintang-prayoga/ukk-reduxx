@@ -106,7 +106,9 @@ function ComicChaptersPage({ chapters }) {
   if (session) {
     if (chapters.length !== 0) {
       if (
-        chapters.comic.createdBy[0].id === session.user.id ||
+        session.user.createdComic.find(
+          (comic) => comic.id === chapters[0].comic.id
+        ) ||
         session.user.role === "super"
       ) {
         return (
@@ -159,6 +161,11 @@ function ComicChaptersPage({ chapters }) {
           <div className=" rounded-lg shadow-md flex-col">
             <h1 className="text-2xl">There are no chapters yet.</h1>
           </div>
+          <Link href={`/follows/drafts/${session.user.id}`}>
+            <button className="bg-cyan-500 px-2 py-1 rounded-lg flex gap-2 mx-auto">
+              Go Back
+            </button>
+          </Link>
         </>
       );
     }

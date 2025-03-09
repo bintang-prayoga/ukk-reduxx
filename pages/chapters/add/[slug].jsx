@@ -94,7 +94,7 @@ function ChapterAddPage({ comic }) {
 
   if (session) {
     if (
-      session.user.id === comic.createdBy[0].id ||
+      // session.user.id === comic.createdBy[0].id ||
       session.user.role === "super"
     ) {
       return (

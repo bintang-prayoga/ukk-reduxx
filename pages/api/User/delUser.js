@@ -7,6 +7,10 @@ export default async function delUser(req, res) {
     where: {
       id: id,
     },
+    include: {
+      recaps: true,
+      ratings: true,
+    },
   });
 
   return res.json(deleteUser);

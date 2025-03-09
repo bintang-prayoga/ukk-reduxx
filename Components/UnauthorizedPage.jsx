@@ -20,12 +20,12 @@ function UnauthorizedPage() {
     >
       <div className="absolute bg-black opacity-60 inset-0 z-0"></div>
       <div className="max-w-md w-full space-y-8 p-10 bg-zinc-800 rounded-xl z-0 text-center ">
-        <Image
+        {/* <Image
           src={`https://cdn.discordapp.com/attachments/949216626715279391/1070896837139103744/pngegg.png`}
           width={200}
           height={150}
           className="rounded-full mx-auto"
-        />
+        /> */}
         <h1 className="font-semibold md:text-lg">
           You Are Not Authorized to Access This Page
         </h1>

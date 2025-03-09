@@ -7,18 +7,21 @@ import {
   FaSignOutAlt,
   FaBook,
   FaUserFriends,
+  FaRegHourglass,
 } from "react-icons/fa";
 import { MdEditNote, MdCategory, MdHistory } from "react-icons/md";
 import { Fragment, useEffect } from "react";
 import { Transition } from "@headlessui/react";
 import { Avatar } from "flowbite-react";
 import { signOut } from "next-auth/react";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export function DisplayManage({ router, activeNav, defaultNav, session }) {
   const today = moment().format("DD MMM YYYY");
   session.allComic.map((item, index) => {
-    item.createdAt = moment(item.createdAt).format("DD MMM YYYY");
+    item.createdAt = moment(item.createdAt)
+      .tz("Asia/Jakarta")
+      .format("DD MMM YYYY");
   });
   const todayComic = session.allComic.filter(
     (item) => item.createdAt === today
@@ -187,7 +190,7 @@ function Routes({ sidenav, setSideNav, session }) {
                 </Link>
                 {session && (
                   <div>
-                    <li className="mt-4  text-xl">Follows</li>
+                    <li className="mt-4 text-xl">Follows</li>
 
                     <Link href={`/follows/bookmark/${session.user.id}`}>
                       <li
@@ -201,6 +204,20 @@ function Routes({ sidenav, setSideNav, session }) {
                       >
                         <FaBookmark className="mr-4" />
                         <span>Bookmark</span>
+                      </li>
+                    </Link>
+                    <Link href={`/follows/history/${session.user.id}`}>
+                      <li
+                        className={`
+                      ${
+                        router.pathname === "/follows/history/[id]"
+                          ? activeNav
+                          : defaultNav
+                      } cursor-pointer
+                    `}
+                      >
+                        <FaRegHourglass className="mr-4" />
+                        <span>History</span>
                       </li>
                     </Link>
                     <Link href={`/follows/drafts/${session.user.id}`}>

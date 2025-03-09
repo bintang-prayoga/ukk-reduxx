@@ -57,6 +57,19 @@ export default NextAuth({
               genres: true,
             },
           },
+          ratings: {
+            select: {
+              id: true,
+              comicId: true,
+              userId: true,
+              score: true,
+            },
+          },
+          recaps: {
+            select: {
+              userId: true,
+            },
+          },
         },
       });
       const allComic = await prisma.comic.findMany({

@@ -1,6 +1,6 @@
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { UnauthorizedPage } from "../../components";
+import { UnauthorizedPage } from "../../Components";
 import { FaSignOutAlt } from "react-icons/fa";
 import UserLayout from "../Layout/UserLayout";
 import Image from "next/image";
@@ -32,7 +32,7 @@ function ProfilesPage() {
                 />
               )}
               <Link href={`/profiles/edit/${session.user.id}`}>
-                <button className="bg-cyan-500 text-white px-5 py-2 rounded-full mt-5">
+                <button className="bg-cyan-500 text-black px-5 py-2 rounded-full mt-5">
                   Edit Profile
                 </button>
               </Link>
@@ -62,11 +62,11 @@ function ProfilesPage() {
                 </h1>
               </div>
               <button
-                className="flex text-2xl bg-zinc-900 rounded-lg gap-2 mx-auto py-1 px-3"
+                className="flex text-2xl bg-zinc-900 rounded-lg gap-2 my-2 py-1 px-3 hover:bg-red-500 hover:text-white"
                 onClick={() => signOut()}
               >
                 Logout
-                <FaSignOutAlt className="my-auto" />
+                <FaSignOutAlt className="my-2" />
               </button>
             </div>
           </div>

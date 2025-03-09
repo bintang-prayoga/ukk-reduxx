@@ -1,4 +1,4 @@
-import { UnauthorizedPage, ModalComp } from "../../../components";
+import { UnauthorizedPage, ModalComp } from "../../../Components";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { BsCloudUpload } from "react-icons/bs";
@@ -125,6 +125,7 @@ function ProfilesEditPage({ user }) {
           body: formData,
         }
       ).then((r) => r.json());
+      console.log(coverUrl);
       data.image = coverUrl.secure_url;
 
       if (isOpen.password) {
@@ -346,7 +347,7 @@ function ProfilesEditPage({ user }) {
               )}
               <button
                 type="submit"
-                className="bg-zinc-900 text-white rounded-md px-4 py-2 my-2 hover:bg-zinc-700"
+                className="bg-cyan-500 text-white rounded-md px-4 py-2 my-2 hover:bg-cyan-700"
               >
                 Update
               </button>

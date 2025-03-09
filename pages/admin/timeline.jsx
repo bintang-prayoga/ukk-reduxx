@@ -5,7 +5,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import getComic from "../api/Comic/getComic";
 import UserLayout from "../Layout/UserLayout";
-import moment from "moment";
+import moment from "moment-timezone";
 export async function getServerSideProps() {
   const comic = await getComic();
   return {
@@ -25,8 +25,12 @@ function TimelineDashboard({ comic }) {
       comic.map((item, index) => {
         return {
           index: index + 1,
-          createdAt: moment(item.createdAt).format("DD MMM YYYY"),
-          createdTime: moment(item.createdAt, "YYYYMMDD").fromNow(),
+          createdAt: moment(item.createdAt)
+            .tz("Asia/Jakarta")
+            .format("DD MMM YYYY"),
+          createdTime: moment(item.createdAt, "YYYYMMDD")
+            .tz("Asia/Jakarta")
+            .fromNow(),
           ...item,
         };
       }),

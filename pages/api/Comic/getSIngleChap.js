@@ -54,11 +54,20 @@ export default async function getSIngleChap(req, res) {
     },
   });
 
+  const allChapters = await prisma.chapters.findMany({
+    where: {
+      comicId: initialChapter.comicId,
+    },
+    select: {
+      id: true,
+      chapNum: true,
+      title: true,
+    },
+  });
+
   initialChapter.comic.chapters = initialChapter.comic.chapters.length;
 
-  console.log(initialChapter);
-
   return JSON.parse(
-    JSON.stringify({ initialChapter, prevChapter, nextChapter })
+    JSON.stringify({ allChapters, initialChapter, prevChapter, nextChapter })
   );
 }

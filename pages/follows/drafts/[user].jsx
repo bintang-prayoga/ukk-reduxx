@@ -1,21 +1,21 @@
-import {
-  UnauthorizedPage,
-  Card,
-  Confirm,
-  ModalComp,
-} from "../../../components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Link from "next/link";
 import UserLayout from "../../Layout/UserLayout";
 import getCreatedBy from "../../api/Comic/getCreatedBy";
+import {
+  UnauthorizedPage,
+  Card,
+  Confirm,
+  ModalComp,
+} from "../../../Components";
 
 export async function getServerSideProps(context) {
   const drafts = await getCreatedBy(context);
   return {
     props: {
-      drafts: drafts,
+      drafts: drafts.reverse(),
     },
   };
 }

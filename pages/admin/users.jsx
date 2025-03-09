@@ -7,7 +7,7 @@ import {
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import moment from "moment";
+import moment from "moment-timezone";
 import UserLayout from "../Layout/UserLayout";
 import getAllUser from "../api/User/getAllUser";
 import Link from "next/link";
@@ -118,7 +118,9 @@ function UserManagementPage({ users }) {
         header: "Created At",
         cell: (info) => (
           <span>
-            {moment(info.getValue()).format("DD MMMM YYYY, h:mm:ss a")}
+            {moment(info.getValue())
+              .tz("Asia/Jakarta")
+              .format("DD MMMM YYYY, h:mm:ss a")}
           </span>
         ),
       }),

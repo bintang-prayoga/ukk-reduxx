@@ -4,26 +4,34 @@ import {
   FaChevronUp,
   FaBookmark,
   FaRegBookmark,
+  FaRegStar,
 } from "react-icons/fa";
 import { BsClockHistory } from "react-icons/bs";
 import { FiUser } from "react-icons/fi";
 import { useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
 import { ModalComp } from "../../Components";
-import moment from "moment";
+import moment from "moment-timezone";
 import parse from "html-react-parser";
-import getSelected from "../api/Comic/getSelected";
 import UserLayout from "../Layout/UserLayout";
 import Link from "next/link";
 import Image from "next/image";
+import getSelected from "../api/Comic/getSelected";
 import getRelated from "../api/Comic/getRelated";
 
 export async function getServerSideProps(context) {
   const comic = await getSelected(context);
   const relatedComic = await getRelated(context);
+
+  const length = comic.ratings.length;
+  const totalRating = comic.ratings.reduce((acc, item) => acc + item.score, 0);
+  const comicRating = length > 0 ? totalRating / length : 0;
+
   return {
     props: {
       comic: comic,
       relatedComic: relatedComic,
+      comicRating: comicRating,
     },
   };
 }
@@ -68,15 +76,17 @@ export function ShowChapter({ session, comic }) {
     } else {
       return comic.chapters.map((chapter, index) => (
         <Link href={`/chapters/${chapter.id}`} key={index}>
-          <div className="border-l-2 border-l-cyan-500 bg-zinc-900 rounded-tr-md rounded-br-md cursor-pointer">
-            <div className="mx-2 my-2 flex justify-between">
+          <div className="border-l-2 border-l-cyan-500 bg-zinc-900 rounded-tr-md rounded-br-md cursor-pointer py-1">
+            <div className="mx-2 flex justify-between">
               <h3 className="font-bold">
                 Ch. {chapter.chapNum} - {chapter.title}
               </h3>
               <p className="flex align-middle">
                 <BsClockHistory className="my-auto" />{" "}
                 <span className="mx-2">
-                  {moment(chapter.createdAt, "YYYYMMDD").fromNow()}
+                  {moment(chapter.createdAt, "YYYYMMDD")
+                    .tz("Asia/Jakarta")
+                    .fromNow()}
                 </span>
               </p>
             </div>
@@ -94,9 +104,13 @@ export function ShowChapter({ session, comic }) {
         </div>
       );
     } else {
+      const earliestChapters = [...comic.chapters]
+        .sort((a, b) => a.chapNum - b.chapNum)
+        .slice(0, 3);
+      earliestChapters.reverse();
       return (
         <>
-          {comic.chapters.slice(0, 3).map((chapter, index) => (
+          {earliestChapters.map((chapter, index) => (
             <Link href={`/chapters/${chapter.id}`} key={index}>
               <div className="border-l-2 border-l-cyan-500 bg-zinc-900 rounded-tr-md rounded-br-md cursor-pointer">
                 <div className="mx-2 my-2 flex justify-between">
@@ -106,7 +120,9 @@ export function ShowChapter({ session, comic }) {
                   <p className="flex align-middle">
                     <BsClockHistory className="my-auto" />{" "}
                     <span className="mx-2">
-                      {moment(chapter.createdAt, "YYYYMMDD").fromNow()}
+                      {moment(chapter.createdAt, "YYYYMMDD")
+                        .tz("Asia/Jakarta")
+                        .fromNow()}
                     </span>
                   </p>
                 </div>
@@ -138,7 +154,7 @@ export function BookmarkBtn({ session, comic, addBookmark, removeBookmark }) {
           onClick={() => removeBookmark()}
         >
           <FaBookmark className="my-auto" />
-          <p className="mx-2">Remove From Bookmark</p>
+          <p className="mx-2">Remove Bookmark</p>
         </button>
       );
     } else {
@@ -148,7 +164,7 @@ export function BookmarkBtn({ session, comic, addBookmark, removeBookmark }) {
           onClick={() => addBookmark()}
         >
           <FaRegBookmark className="my-auto" />
-          <p className="mx-2">Add To Bookmark</p>
+          <p className="mx-2">Bookmark</p>
         </button>
       );
     }
@@ -157,16 +173,94 @@ export function BookmarkBtn({ session, comic, addBookmark, removeBookmark }) {
       <Link href="/login">
         <button className="bg-cyan-500 px-5 py-2 rounded-md flex flex-row text-black">
           <FaRegBookmark className="my-auto" />
-          <p className="mx-2">Add To Bookmark</p>
+          <p className="mx-2">Bookmark</p>
         </button>
       </Link>
     );
   }
 }
 
-export default function SingleComic({ comic, relatedComic }) {
+export function RatingBtn({
+  session,
+  comic,
+  register,
+  addRating,
+  updateRating,
+}) {
+  const ratingOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  //check if user has rated the comic
+  if (session) {
+    const rate = session.user.ratings.find((rate) => rate.comicId === comic.id);
+    if (session.user.ratings.some((rate) => rate.comicId === comic.id)) {
+      return (
+        <form className="max-w-sm">
+          <select
+            id="countries"
+            className="bg-cyan-500 text-sm rounded-lg focus:ring-zinc-700 focus:border-zinc-700 block w-full p-2.5 text-black"
+            value={rate.score}
+            {...register("rating", {
+              onChange: (e) =>
+                updateRating({ score: e.target.value, ratingId: rate.id }),
+            })}
+          >
+            {ratingOptions.map((rating, index) => (
+              <option
+                key={index}
+                value={rating}
+                className="bg-zinc-700 text-white"
+              >
+                {rating}{" "}
+              </option>
+            ))}
+            <option value={11} className="bg-zinc-700 text-white">
+              Remove Rating
+            </option>
+          </select>
+        </form>
+      );
+    } else {
+      return (
+        <form className="max-w-sm">
+          <select
+            id="rating"
+            className="bg-zinc-700 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5"
+            name="rating"
+            defaultValue={rate?.score || 0}
+            {...register("rating", {
+              onChange: (e) => addRating(e.target.value),
+            })}
+          >
+            <option>Rate</option>
+            {ratingOptions.map((rating, index) => (
+              <option key={index} value={rating}>
+                {rating}{" "}
+              </option>
+            ))}
+          </select>
+        </form>
+      );
+    }
+  } else {
+    return (
+      <Link href="/login">
+        <button className="bg-cyan-500 px-5 py-2 rounded-md flex flex-row text-black">
+          <FaRegStar className="my-auto" />
+          <p className="mx-2">Rate</p>
+        </button>
+      </Link>
+    );
+  }
+}
+
+export default function SingleComic({ comic, relatedComic, comicRating }) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
   const { data: session } = useSession();
-  const [ascend, setAscend] = useState(() => true);
   const [related, setRelated] = useState(relatedComic);
   const [statusStyle, setStatusStyle] = useState(() => "");
   const [modalData, setModalData] = useState({
@@ -189,6 +283,63 @@ export default function SingleComic({ comic, relatedComic }) {
     } else {
       setStatusStyle("bg-red-500");
     }
+  }
+
+  async function addRating(data) {
+    await fetch("/api/Comic/postRating", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comicId: comic.id,
+        userId: session.user.id,
+        score: data,
+      }),
+    }).then((res) => {
+      if (res.status === 200) {
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          message: `Successfully rated ${comic.title}`,
+        });
+        window.location.reload();
+      } else {
+        setModalData({
+          isOpen: true,
+          title: "Error",
+          message: `Failed to rate ${comic.title}`,
+        });
+      }
+    });
+  }
+
+  async function updateRating(data) {
+    await fetch("/api/Comic/updateRating", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ratingId: data.ratingId,
+        score: data.score,
+      }),
+    }).then((res) => {
+      if (res.status === 200) {
+        setModalData({
+          isOpen: true,
+          title: "Success",
+          message: `Successfully updated rating`,
+        });
+        window.location.reload();
+      } else {
+        setModalData({
+          isOpen: true,
+          title: "Error",
+          message: `Failed to update rating`,
+        });
+      }
+    });
   }
 
   async function addBookmark() {
@@ -263,6 +414,7 @@ export default function SingleComic({ comic, relatedComic }) {
               height={496}
               src={comic.coverArt}
               className="rounded shadow-md max-w-[21rem] max-h-[31rem]"
+              priority={true}
             />
           </div>
           <div className="flex flex-col gap-4 px-5 col-span-2">
@@ -283,10 +435,18 @@ export default function SingleComic({ comic, relatedComic }) {
                   ></span>
                   {comic.status}
                 </p>
-                <p className="flex">
+                <div className="flex">
                   <FaRegBookmark className="my-auto" />
-                  {comic.bookmarks.length}
-                </p>
+                  <p>{comic.bookmarks.length}</p>
+                  <div className="mx-1"></div>
+                  <FaRegStar className="my-auto" />
+                  <p className="mx-1">
+                    {comicRating.toString().substring(0, 3)}
+                    <span className="mx-1 text-gray-400 text-xs">
+                      ({comic.ratings.length})
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-1">
@@ -302,12 +462,19 @@ export default function SingleComic({ comic, relatedComic }) {
 
             <ReadMore text={comic.synopsis} sliced="200" />
 
-            <div>
+            <div className="mt-5 flex gap-2">
               <BookmarkBtn
                 session={session}
                 comic={comic}
                 addBookmark={addBookmark}
                 removeBookmark={removeBookmark}
+              />
+              <RatingBtn
+                session={session}
+                comic={comic}
+                addRating={addRating}
+                updateRating={updateRating}
+                register={register}
               />
             </div>
           </div>

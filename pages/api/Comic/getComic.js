@@ -18,7 +18,13 @@ export default async function getComic(req, res) {
       featured: true,
       chapters: true,
       createdAt: true,
+      ratings: {
+        select: {
+          score: true,
+        },
+      },
     },
+
     orderBy: {
       createdAt: "desc",
     },

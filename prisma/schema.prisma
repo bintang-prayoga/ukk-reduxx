@@ -16,8 +16,8 @@ model User {
   updatedAt    DateTime @updatedAt
   image        String?
   role         String   @default("user")
-  Rating       Rating[]
-  Recap        Recap[]
+  ratings      Rating[]
+  recaps       Recap[]
   bookmarks    Comic[]  @relation("bookmarks")
   createdComic Comic[]  @relation("createdComic")
 }
@@ -72,7 +72,7 @@ model Rating {
   id        String   @id @default(cuid())
   comicId   String
   userId    String
-  score     Float
+  score     Int?     
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   comic     Comic    @relation(fields: [comicId], references: [id])

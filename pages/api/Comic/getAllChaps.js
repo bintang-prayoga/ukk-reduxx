@@ -21,6 +21,7 @@ export default async function getAllChaps(req, res) {
           id: true,
           title: true,
           createdBy: true,
+          slug: true,
         },
       },
     },

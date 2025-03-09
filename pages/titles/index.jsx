@@ -22,40 +22,53 @@ function TitleSearchPage({ genre, latest }) {
     register,
     watch,
     handleSubmit,
+    reset, // reset function to reset form values
     formState: { errors },
   } = useForm();
   const [resultCon, setResultCon] = useState({
     isOpen: false,
   });
-  const [latestComic, setLatestComic] = useState(latest);
+  const [latestComic, setLatestComic] = useState(latest || []); // Default ke array kosong jika data kosong
   const [filter, setFilter] = useState(() => false);
 
   async function onSubmit(data) {
     if (data.title || data.genres) {
-      const searchData = await fetch(`/api/Comic/searchTitle`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then((r) => r.json());
-      if (searchData.length === 0) {
-        setResultCon({
-          isOpen: true,
-        });
-      } else {
-        setLatestComic(searchData);
-        setResultCon({
-          isOpen: false,
-        });
+      try {
+        const searchData = await fetch(`/api/Comic/searchTitle`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }).then((r) => r.json());
+
+        // Pastikan searchData selalu berupa array
+        if (Array.isArray(searchData) && searchData.length > 0) {
+          setLatestComic(searchData);
+          setResultCon({ isOpen: false });
+        } else {
+          setLatestComic([]); // Reset ke array kosong jika tidak ada hasil
+          setResultCon({ isOpen: true });
+        }
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+        setLatestComic([]);
+        setResultCon({ isOpen: true });
       }
     } else {
-      setLatestComic(latest);
-      setResultCon({
-        isOpen: false,
-      });
+      setLatestComic(latest); // Reset ke data awal jika input kosong
+      setResultCon({ isOpen: false });
     }
   }
+
+  // Function to reset both title and genres
+  const resetFilters = () => {
+    reset({
+      title: "", // Clear the title field
+      genres: [], // Clear the genres field
+    });
+    setLatestComic(latest); // Reset to default data
+  };
 
   return (
     <>
@@ -64,7 +77,7 @@ function TitleSearchPage({ genre, latest }) {
         <form onChange={handleSubmit(onSubmit)}>
           <div className="flex justify-center mt-3">
             <input
-              type={`text`}
+              type="text"
               className="bg-zinc-900 border border-zinc-900 w-full rounded-md shadow-sm focus:outline-none focus:border-cyan-500 focus:ring-cyan-500 focus:ring-1 sm:text-sm"
               placeholder="Search Comic Title"
               {...register("title")}
@@ -87,16 +100,6 @@ function TitleSearchPage({ genre, latest }) {
               <div className="flex flex-wrap gap-2 mt-2">
                 {genre.map((genre, index) => (
                   <div key={index}>
-                    <label
-                      htmlFor={genre.name}
-                      className={`flex items-center rounded-md px-2 py-1 cursor-pointer ${
-                        watch("genres") && watch("genres")?.includes(genre.id)
-                          ? "bg-cyan-600"
-                          : "bg-zinc-900"
-                      }`}
-                    >
-                      {genre.name}
-                    </label>
                     <input
                       {...register("genres")}
                       id={genre.name}
@@ -104,13 +107,28 @@ function TitleSearchPage({ genre, latest }) {
                       value={genre.id}
                       type="checkbox"
                     />
+                    <label
+                      htmlFor={genre.name}
+                      className={`flex items-center rounded-md px-2 py-1 cursor-pointer ${
+                        // Make sure to use default value as empty array if watch('genres') is undefined
+                        (watch("genres") || []).includes(String(genre.id))
+                          ? "bg-cyan-600 text-white"
+                          : "bg-zinc-900 text-gray-300"
+                      }`}
+                    >
+                      {genre.name}
+                    </label>
                   </div>
                 ))}
                 <div>
-                  <input
-                    className="flex items-center rounded-md px-2 py-1 cursor-pointer bg-cyan-500"
-                    type="submit"
-                  />
+                  {/* Reset button to clear both title and genres */}
+                  <button
+                    type="button" // Set button type to 'button' to avoid form submission
+                    onClick={resetFilters}
+                    className="flex items-center rounded-md px-2 py-1 cursor-pointer bg-red-500 text-white"
+                  >
+                    Reset Filters
+                  </button>
                 </div>
               </div>
             </div>
@@ -123,16 +141,21 @@ function TitleSearchPage({ genre, latest }) {
           </div>
         ) : (
           <div>
-            {latestComic.map((comic, index) => (
-              <div className="bg-zinc-900 rounded-md my-2 cursor-pointer lg:flex w-full hover:bg-slate-800">
-                <Card
+            {/* Tambahkan validasi jika latestComic bukan array */}
+            {Array.isArray(latestComic) && latestComic.length > 0 ? (
+              latestComic.map((comic, index) => (
+                <div
                   key={index}
-                  index={index}
-                  comic={comic}
-                  bg="bg-zinc-800"
-                />
+                  className="bg-zinc-900 rounded-md my-2 cursor-pointer lg:flex w-full hover:bg-slate-800"
+                >
+                  <Card index={index} comic={comic} bg="bg-zinc-800" />
+                </div>
+              ))
+            ) : (
+              <div className="text-center text-gray-500">
+                <p>No comics available</p>
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>

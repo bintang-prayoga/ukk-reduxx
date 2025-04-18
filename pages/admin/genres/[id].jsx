@@ -4,6 +4,7 @@ import { TableComp, ModalComp, UnauthorizedPage } from "../../../Components";
 import { useState, useMemo } from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import getSelectedGenre from "../../api/Comic/getSelectedGenre";
+import Link from "next/link";
 
 export async function getServerSideProps(context) {
   const genre = await getSelectedGenre(context);
@@ -43,7 +44,18 @@ function GenreDetails({ genre }) {
       }),
       columnHelper.accessor("title", {
         header: "Title",
-        cell: (info) => <span>{info.getValue()}</span>,
+        cell: (info) => (
+          <span>
+            <Link
+              rel="noopener noreferrer"
+              target="_blank"
+              href={`/titles/${info.row.original.slug}`}
+              className="text-blue-500 hover:underline"
+            >
+              {info.getValue()}
+            </Link>
+          </span>
+        ),
       }),
     ],
     []
@@ -58,7 +70,7 @@ function GenreDetails({ genre }) {
           )}
           <div>
             <h1 className="text-2xl font-semibold my-2">
-              {genre.name} - Details
+              {genre.name} - {genre.comic.length} Comics
             </h1>
             <div className=" rounded-lg shadow-md flex-col">
               <TableComp columns={columns} data={genreData} />

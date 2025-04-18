@@ -100,7 +100,7 @@ function FeaturedDashboard({ comic }) {
             <ModalComp modalData={modalData} setModalData={setModalData} />
           )}
           <div>
-            <h1 className="text-2xl font-semibold">Featured Dashboard</h1>
+            <h1 className="text-2xl font-semibold mb-4">Featured Dashboard</h1>
             <div className=" rounded-lg shadow-md flex-col">
               <TableComp columns={columns} data={featuredData} />
             </div>

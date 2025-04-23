@@ -107,15 +107,22 @@ function ComicDraftsPage({ drafts }) {
               </h1>
             </div>
           ) : (
-            <Link href="/follows/drafts/newDrafts">
-              <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
-                <h1 className="py-5">+ New Title</h1>
-              </div>
-            </Link>
+            <div className="mx-auto grid grid-cols-1 gap-4 mt-5">
+              <Link href="/follows/drafts/newDrafts">
+                <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
+                  <h1 className="py-5">+ New Comic</h1>
+                </div>
+              </Link>
+              <Link href="/follows/drafts/illustration">
+                <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
+                  <h1 className="py-5">+ New Illustration</h1>
+                </div>
+              </Link>
+            </div>
           )}
           {drafts.length === 0 ? (
             <div className="flex justify-center my-5">
-              <h1 className="text-2xl font-bold">No Drafts</h1>
+              <h1 className="text-2xl font-bold">Empty Drafts</h1>
             </div>
           ) : (
             <div className="mt-5">

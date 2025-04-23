@@ -25,6 +25,7 @@ export async function getServerSideProps(context) {
 function NewDraftsPage({ genre }) {
   const { data: session } = useSession();
   const statusValue = [`Ongoing`, `Completed`, `Hiatus`, `Cancelled`];
+  const exclusivityValue = [`Free`, `Tier 1`, `Tier 2`, `Tier 3`];
   const [photo, setPhoto] = useState({ imgSrc: [], value: [] });
   const [modalData, setModalData] = useState({
     title: "",
@@ -129,15 +130,34 @@ function NewDraftsPage({ genre }) {
 
             <form className="" onSubmit={handleSubmit(onSubmit)}>
               <div className="flex flex-col ">
-                <div className="my-2">
-                  <h1 className="">Title</h1>
-                  <input
-                    {...register("title", { required: true })}
-                    type={`text`}
-                    name="title"
-                    className=" bg-zinc-700 w-full focus:border-zinc-700 border-none rounded-md"
-                    placeholder="Enter Title"
-                  />
+                <div className="grid gap-x-6 grid-cols-1 lg:grid-cols-4">
+                  <div className="my-2 col-span-3">
+                    <h1 className="">Title</h1>
+                    <input
+                      {...register("title", { required: true })}
+                      type={`text`}
+                      name="title"
+                      className=" bg-zinc-700 w-full focus:border-zinc-700 border-none rounded-md"
+                      placeholder="Enter Title"
+                    />
+                  </div>
+                  <div className="my-2 col-span-1">
+                    <h1>Exclusivity</h1>
+                    <select
+                      {...register("exclusivity", { required: true })}
+                      name="status"
+                      required={true}
+                      className="bg-zinc-700 w-full focus:border-zinc-700 border-none rounded-md"
+                      id="status"
+                    >
+                      <option value="">Select</option>
+                      {exclusivityValue.map((status, index) => (
+                        <option key={index} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 <div className="my-2">
                   <h1 className="">Synopsis</h1>

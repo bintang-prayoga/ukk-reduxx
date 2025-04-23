@@ -18,6 +18,7 @@ model User {
   role         String   @default("user")
   ratings      Rating[]
   recaps       Recap[]
+  comments     Comment[]
   bookmarks    Comic[]  @relation("bookmarks")
   createdComic Comic[]  @relation("createdComic")
 }
@@ -34,9 +35,12 @@ model Comic {
   createdAt   DateTime   @default(now())
   publication String
   slug        String?    @unique
+  type        String
+  exclusivity String
   chapters    Chapters[]
   ratings     Rating[]
   recaps      Recap[]
+  comments    Comment[]
   genres      Genre[]    @relation("ComicToGenre")
   bookmarks   User[]     @relation("bookmarks")
   createdBy   User[]     @relation("createdComic")
@@ -89,4 +93,24 @@ model Recap {
   chapter   Chapters @relation(fields: [chapterId], references: [id])
   comic     Comic    @relation(fields: [comicId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id         String     @id @default(cuid())
+  userId     String
+  comicId    String
+  comment    String
+  likes      Int       @default(0)
+  dislikes   Int       @default(0)
+  isDeleted  Boolean    @default(false)
+  isEdited   Boolean    @default(false)  
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  parentId   String?    
+  parent     Comment?   @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    Comment[]  @relation("CommentReplies")
+
+  user       User       @relation(fields: [userId], references: [id])
+  comic      Comic      @relation(fields: [comicId], references: [id])
 }

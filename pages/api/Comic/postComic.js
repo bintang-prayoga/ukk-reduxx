@@ -9,6 +9,7 @@ export default async function postComic(req, res) {
     artist,
     status,
     publication,
+    exclusivity,
     genres,
     coverArt,
     createdBy,
@@ -18,11 +19,13 @@ export default async function postComic(req, res) {
     const newComic = await prisma.comic.create({
       data: {
         title: title,
+        type: "comic",
         slug: slugify(title, { lower: true, replacement: "-" }),
         synopsis: synopsis,
         author: author,
         artist: artist,
         coverArt: coverArt,
+        exclusivity: exclusivity,
         genres: {
           connect: genres.map((genre) => {
             return {

@@ -141,7 +141,7 @@ function ComicsDashboard({ comic, genre, user }) {
         cell: (info) => (
           <div className="grid grid-cols-2 text-center">
             {console.log(info.row.original)}
-            <Link href={`/follows/drafts/edit/${info.row.original.slug}`}>
+            <Link href={`/follows/drafts/editComic/${info.row.original.slug}`}>
               <button className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2">
                 Edit
               </button>

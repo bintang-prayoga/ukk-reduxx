@@ -4,14 +4,15 @@ import slugify from "slugify";
 export default async function postComic(req, res) {
   const {
     title,
+    type,
     synopsis,
     author,
     artist,
     status,
     publication,
-    exclusivity,
     genres,
     coverArt,
+    exclusivity,
     createdBy,
   } = req.body;
 
@@ -19,7 +20,7 @@ export default async function postComic(req, res) {
     const newComic = await prisma.comic.create({
       data: {
         title: title,
-        type: "comic",
+        type: type,
         slug: slugify(title, { lower: true, replacement: "-" }),
         synopsis: synopsis,
         author: author,
@@ -43,9 +44,9 @@ export default async function postComic(req, res) {
         },
       },
     });
+
     res.status(200).json({ message: "Comic created" });
   } catch (error) {
-    console.log(error);
     res.status(500).json(error.message);
   }
 }

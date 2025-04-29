@@ -25,7 +25,7 @@ export async function getServerSideProps(context) {
 function NewDraftsPage({ genre }) {
   const { data: session } = useSession();
   const statusValue = [`Ongoing`, `Completed`, `Hiatus`, `Cancelled`];
-  const exclusivityValue = [`Free`, `Tier 1`, `Tier 2`, `Tier 3`];
+  const exclusivityValue = [`Free`, `Paid`];
   const [photo, setPhoto] = useState({ imgSrc: [], value: [] });
   const [modalData, setModalData] = useState({
     title: "",
@@ -60,6 +60,8 @@ function NewDraftsPage({ genre }) {
   async function onSubmit(data) {
     data.synopsis = synopsisValue;
     data.createdBy = session.user.id;
+    data.type = "comic";
+
     if (photo.imgSrc.length > 0) {
       setIsSpin(true);
 
@@ -94,12 +96,14 @@ function NewDraftsPage({ genre }) {
               isOpen: true,
             });
           } else if (response.status === 400) {
+            console.log(response);
             setModalData({
               title: "Failure",
               message: `Comic ${data.title} creation failed`,
               isOpen: true,
             });
           } else if (response.status === 500) {
+            console.log(response);
             setModalData({
               title: "Failure",
               message: `Comic ${data.title} creation failed`,
@@ -145,10 +149,10 @@ function NewDraftsPage({ genre }) {
                     <h1>Exclusivity</h1>
                     <select
                       {...register("exclusivity", { required: true })}
-                      name="status"
+                      name="exclusivity"
                       required={true}
                       className="bg-zinc-700 w-full focus:border-zinc-700 border-none rounded-md"
-                      id="status"
+                      id="exclusivity"
                     >
                       <option value="">Select</option>
                       {exclusivityValue.map((status, index) => (

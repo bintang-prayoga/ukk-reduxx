@@ -28,12 +28,12 @@ function Card({ comic, index, bg }) {
               width={300}
               height={200}
               className="max-h-[10rem]
-                    sm:max-h-[calc(300px-4rem)]
-                    max-w-[10rem]
-                    object-contain 
-                    rounded-md
-                    sm:shadow-lg
-                    bg-none"
+                      sm:max-h-[calc(300px-4rem)]
+                      max-w-[10rem]
+                      object-contain 
+                      rounded-md
+                      sm:shadow-lg
+                      bg-none"
             />
           </div>
           <div className="col-span-2 flex-col">
@@ -43,9 +43,11 @@ function Card({ comic, index, bg }) {
               {comic.title}
             </h1>
             <p className="mt-1 text-center lg:text-left font-semibold">
-              {comic.author === comic.artist
-                ? comic.author
-                : `${comic.author}, ${comic.artist}`}
+              {comic.type === "comic"
+                ? comic.author === comic.artist
+                  ? comic.author
+                  : `${comic.author}, ${comic.artist}`
+                : "Illustration"}
             </p>
             <div className="flex my-2">
               <div className="flex mx-auto lg:mx-0">
@@ -60,7 +62,11 @@ function Card({ comic, index, bg }) {
               </div>
             </div>
             <div className={`mt-5 hidden lg:block`}>
-              {parse(comic.synopsis.slice(0, 200))}
+              {comic.type === "comic" ? (
+                parse(comic.synopsis.slice(0, 200))
+              ) : (
+                <p></p>
+              )}
             </div>
           </div>
         </div>

@@ -27,13 +27,13 @@ model Comic {
   id          String     @id @default(cuid())
   title       String     @unique
   synopsis    String
-  author      String
-  artist      String
+  author      String?    
+  artist      String?
   coverArt    String?
-  status      String
+  status      String?
   featured    Boolean    @default(false)
   createdAt   DateTime   @default(now())
-  publication String
+  publication String?
   slug        String?    @unique
   type        String
   exclusivity String
@@ -99,9 +99,7 @@ model Comment {
   id         String     @id @default(cuid())
   userId     String
   comicId    String
-  comment    String
-  likes      Int       @default(0)
-  dislikes   Int       @default(0)
+  comment    String  
   isDeleted  Boolean    @default(false)
   isEdited   Boolean    @default(false)  
   createdAt  DateTime   @default(now())

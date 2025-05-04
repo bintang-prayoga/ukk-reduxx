@@ -99,7 +99,7 @@ model Comment {
   id         String     @id @default(cuid())
   userId     String
   comicId    String
-  comment    String  
+  content    String  
   isDeleted  Boolean    @default(false)
   isEdited   Boolean    @default(false)  
   createdAt  DateTime   @default(now())

@@ -557,53 +557,38 @@ export default function SingleComic({ comic, relatedComic, comicRating }) {
       <>
         <ModalComp modalData={modalData} setModalData={setModalData} />
         <div className="">
+          <div className="w-full max-w-4xl mx-auto px-4">
+            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
+              <Image
+                src={comic.coverArt}
+                alt={comic.title}
+                layout="fill"
+                objectFit="contain"
+                className="rounded-md"
+                priority
+              />
+            </div>
+          </div>
           <div
             className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense`}
           >
-            <div className="mx-auto">
-              <Image
-                width={336}
-                height={496}
-                src={comic.coverArt}
-                className="rounded shadow-md max-w-[21rem] max-h-[31rem]"
-                priority={true}
-              />
-            </div>
             <div className="flex flex-col gap-4 px-5 col-span-2">
-              <div className="mt-2">
+              <div className="mt-5">
                 <h1 className="text-5xl font-bold">{comic.title}</h1>
-                <p className="text-lg font-medium my-4">
-                  {comic.author === comic.artist
-                    ? comic.author
-                    : `${comic.author}, ${comic.artist}`}
-                </p>
-                <div className="flex">
-                  <div className="flex">
-                    <FaRegBookmark className="my-auto" />
-                    <p>{comic.bookmarks.length}</p>
-                    <div className="mx-1"></div>
-                    <FaRegStar className="my-auto" />
-                    <p className="mx-1">
-                      {comicRating.toString().substring(0, 3)}
-                      <span className="mx-1 text-gray-400 text-xs">
-                        ({comic.ratings.length})
-                      </span>
-                    </p>
-                  </div>
+
+                <div className="flex mt-2">
+                  <FaRegBookmark className="my-auto" />
+                  <p>{comic.bookmarks.length}</p>
+                  <div className="mx-1"></div>
+                  <FaRegStar className="my-auto" />
+                  <p className="mx-1">
+                    {comicRating.toString().substring(0, 3)}
+                    <span className="mx-1 text-gray-400 text-xs">
+                      ({comic.ratings.length})
+                    </span>
+                  </p>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-1">
-                {comic.genres.map((genre, index) => (
-                  <p
-                    className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1"
-                    key={index}
-                  >
-                    {genre.name}
-                  </p>
-                ))}
-              </div>
-
-              <ReadMore text={comic.synopsis} sliced="200" />
 
               <div className="mt-5 flex gap-2">
                 <BookmarkBtn
@@ -611,6 +596,13 @@ export default function SingleComic({ comic, relatedComic, comicRating }) {
                   comic={comic}
                   addBookmark={addBookmark}
                   removeBookmark={removeBookmark}
+                />
+                <RatingBtn
+                  session={session}
+                  comic={comic}
+                  addRating={addRating}
+                  updateRating={updateRating}
+                  register={register}
                 />
               </div>
             </div>

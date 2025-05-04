@@ -13,7 +13,7 @@ import Image from "next/image";
 
 import "react-quill/dist/quill.snow.css";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
   const genre = await getGenre();
   return {
     props: {

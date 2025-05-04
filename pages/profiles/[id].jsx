@@ -47,9 +47,10 @@ function ProfilesPage() {
                 <h1 className="text-2xl font-semibold">{session.user.email}</h1>
               </div>
               <div>
-                <label className="text-gray-400">Role</label>
+                <label className="text-gray-400">User Type</label>
                 <h1 className="text-2xl font-semibold capitalize">
-                  {session.user.role}
+                  {/* {session.user.role} */}
+                  Paid (6 months)
                 </h1>
               </div>
               <div>
@@ -67,6 +68,11 @@ function ProfilesPage() {
               >
                 Logout
                 <FaSignOutAlt className="my-2" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button className="bg-cyan-500 text-black px-5 py-2 rounded-full mt-5">
+                Manage Subscriptions
               </button>
             </div>
           </div>

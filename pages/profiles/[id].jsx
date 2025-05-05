@@ -31,7 +31,7 @@ function ProfilesPage() {
                   size="xl"
                 />
               )}
-              <Link href={`/profiles/editComic/${session.user.id}`}>
+              <Link href={`/profiles/edit/${session.user.id}`}>
                 <button className="bg-cyan-500 text-black px-5 py-2 rounded-full mt-5">
                   Edit Profile
                 </button>

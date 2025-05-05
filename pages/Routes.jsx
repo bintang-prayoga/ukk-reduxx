@@ -8,6 +8,7 @@ import {
   FaBook,
   FaUserFriends,
   FaRegHourglass,
+  FaDollarSign,
 } from "react-icons/fa";
 import { MdEditNote, MdCategory, MdHistory } from "react-icons/md";
 import { Fragment, useEffect } from "react";
@@ -218,6 +219,20 @@ function Routes({ sidenav, setSideNav, session }) {
                       >
                         <FaRegHourglass className="mr-4" />
                         <span>History</span>
+                      </li>
+                    </Link>
+                    <Link href={`/follows/subscription/${session.user.id}`}>
+                      <li
+                        className={`
+                      ${
+                        router.pathname === "/follows/subscription/[id]"
+                          ? activeNav
+                          : defaultNav
+                      } cursor-pointer
+                    `}
+                      >
+                        <FaDollarSign className="mr-4" />
+                        <span>Subscription</span>
                       </li>
                     </Link>
                     <Link href={`/follows/drafts/${session.user.id}`}>

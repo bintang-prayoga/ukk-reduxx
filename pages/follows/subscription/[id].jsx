@@ -9,21 +9,21 @@ function SubscriptionsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(()=>{
-    getHistory()
-  },[])
+  useEffect(() => {
+    getHistory();
+  }, []);
 
   async function getHistory(params) {
     try {
       const res = await fetch(
-        'https://api.trakteer.id/v1/public/supports?limit=20&page=1',
+        "https://api.trakteer.id/v1/public/supports?limit=20&page=1",
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'key': process.env.TRAKTEER_KEY,
-          }
+            Accept: "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            key: process.env.TRAKTEER_KEY,
+          },
         }
       );
       if (!res.ok) {
@@ -31,7 +31,7 @@ function SubscriptionsPage() {
       }
       const json = await res.json();
       setPayHistory(json.data);
-      console.log(payhistory)
+      console.log(payhistory);
     } catch (err) {
       console.error(err);
     }
@@ -44,10 +44,9 @@ function SubscriptionsPage() {
           <Trakteer />
           <div className="mt-4">
             <h1 className="text-lg font-bold">Riwayat Subscription</h1>
-
           </div>
         </div>
-      )
+      );
     } else {
       return <UnauthorizedPage />;
     }

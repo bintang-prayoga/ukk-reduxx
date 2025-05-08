@@ -589,21 +589,23 @@ export default function SingleComic({ comic, relatedComic, comicRating }) {
                   </p>
                 </div>
               </div>
-
-              <div className="mt-5 flex gap-2">
-                <BookmarkBtn
-                  session={session}
-                  comic={comic}
-                  addBookmark={addBookmark}
-                  removeBookmark={removeBookmark}
-                />
-                <RatingBtn
-                  session={session}
-                  comic={comic}
-                  addRating={addRating}
-                  updateRating={updateRating}
-                  register={register}
-                />
+              <div className="flex justify-between">
+                <div className="mt-5 flex gap-2">
+                  <BookmarkBtn
+                    session={session}
+                    comic={comic}
+                    addBookmark={addBookmark}
+                    removeBookmark={removeBookmark}
+                  />
+                  <CommentBtn session={session} comic={comic} />
+                  <RatingBtn
+                    session={session}
+                    comic={comic}
+                    addRating={addRating}
+                    updateRating={updateRating}
+                    register={register}
+                  />
+                </div>
               </div>
             </div>
           </div>

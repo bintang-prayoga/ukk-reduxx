@@ -127,7 +127,11 @@ function CommentPage({ comment, comic, page, totalPages }) {
         <div>
           <button className="text-gray-300 hover:text-cyan-700 bg-gray-700 hover:bg-gray-600 rounded px-4 py-2 flex justify-between">
             <FaArrowLeft className="mt-1 mr-3" />
-            <Link href={`/titles/${slug}`}>Back to Comic</Link>
+            {comic?.type === "Comic" ? (
+              <Link href={`/titles/${slug}`}>Back to Comic</Link>
+            ) : (
+              <Link href={`/titles/${slug}`}>Back to Illustration</Link>
+            )}
           </button>
         </div>
       </div>

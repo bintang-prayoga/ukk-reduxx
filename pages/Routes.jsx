@@ -44,6 +44,18 @@ export function DisplayManage({ router, activeNav, defaultNav, session }) {
             <span>Users</span>
           </li>
         </Link>
+        <Link href="/admin/payment">
+          <li
+            className={`
+        ${
+          router.pathname === "/admin/payment" ? activeNav : defaultNav
+        } cursor-pointer
+      `}
+          >
+            <FaDollarSign className="mr-4" />
+            <span>Payment</span>
+          </li>
+        </Link>
         <Link href="/admin/comics">
           <li
             className={`

@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaPlus } from "react-icons/fa";
 import { BiRefresh } from "react-icons/bi";
-import authOptions from "../api/auth/[...nextauth]";
+import authOptions from "../api/Auth/[...nextauth]";
 import UserLayout from "../Layout/UserLayout";
 import Link from "next/link";
 import getSubscription from "../api/User/getSubscription";

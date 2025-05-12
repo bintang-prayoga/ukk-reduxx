@@ -77,14 +77,7 @@ function SubscriptionsPage({ subscription }) {
       if (!subscription || subscription.length === 0) {
         return (
           <div className="flex flex-col items-center justify-center h-full">
-            <Link
-              href="https://trakteer.id/BoedTrial/tip/embed/modal"
-              className="text-blue-500 mt-4"
-            >
-              <button className="bg-cyan-500 text-white px-4 py-2 rounded-md">
-                Support Me on Trakteer!
-              </button>
-            </Link>
+            <Trakteer />
             <h1 className="text-lg font-bold my-5">
               You haven't made any transactions
             </h1>

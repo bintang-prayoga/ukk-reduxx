@@ -22,7 +22,7 @@ export default function LoginPage() {
   async function onSubmit(data) {
     if (data.password === data.confirmed) {
       try {
-        const result = await fetch("/api/Auth/signup", {
+        const result = await fetch("/api/auth/signup", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

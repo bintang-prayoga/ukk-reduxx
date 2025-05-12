@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { FaSignOutAlt } from "react-icons/fa";
 import UserLayout from "../Layout/UserLayout";
-import authOptions from "../api/Auth/[...nextauth]";
+import authOptions from "../api/auth/[...nextauth]";
 import getAllUser from "../api/User/getAllUser";
 import getGenre from "../api/Comic/getGenre";
 import getComic from "../api/Comic/getComic";

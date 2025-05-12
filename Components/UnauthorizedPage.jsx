@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 function UnauthorizedPage() {
-  const [count, setCount] = useState(3);
+  const [count, setCount] = useState(5);
   if (count > 0) {
     setTimeout(() => setCount(count - 1), 1000);
   }

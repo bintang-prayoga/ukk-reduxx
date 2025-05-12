@@ -129,7 +129,7 @@ function UserManagementPage({ users }) {
         header: "Action",
         cell: (info) => (
           <div className="grid grid-cols-2 text-center">
-            <Link href={`/admin/user/editComic/${info.row.original.id}`}>
+            <Link href={`/admin/user/edit/${info.row.original.id}`}>
               <button className="bg-blue-500 text-white px-2 py-1 rounded-md mr-2">
                 Edit
               </button>

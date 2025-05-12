@@ -89,97 +89,101 @@ function ComicDraftsPage({ drafts }) {
 
   if (session) {
     if (session.user.id === router.query.user) {
-      return (
-        <>
-          {modalData.isOpen && (
-            <ModalComp modalData={modalData} setModalData={setModalData} />
-          )}
-          {confirmData.isOpen && (
-            <Confirm
-              confirmData={confirmData}
-              setConfirmData={setConfirmData}
-              onSubmit={onSubmit}
-            />
-          )}
-          {session.user.role === "user" &&
-          session.user.createdComic.length >= 5 ? (
-            <div className="flex justify-center my-5">
-              <h1 className="text-2xl font-bold">
-                You have reached the maximum number of comics you can create
-              </h1>
-            </div>
-          ) : (
-            <div className="mx-auto grid grid-cols-1 gap-4 mt-5">
-              <Link href="/follows/drafts/newDrafts">
-                <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
-                  <h1 className="py-5">+ New Comic</h1>
-                </div>
-              </Link>
-              <Link href="/follows/drafts/illustration">
-                <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
-                  <h1 className="py-5">+ New Illustration</h1>
-                </div>
-              </Link>
-            </div>
-          )}
-          {drafts.length === 0 ? (
-            <div className="flex justify-center my-5">
-              <h1 className="text-2xl font-bold">Empty Drafts</h1>
-            </div>
-          ) : (
-            <div className="mt-5 ">
-              {/* <select className="bg-zinc-700">
+      if (session.user.role === "super") {
+        return (
+          <>
+            {modalData.isOpen && (
+              <ModalComp modalData={modalData} setModalData={setModalData} />
+            )}
+            {confirmData.isOpen && (
+              <Confirm
+                confirmData={confirmData}
+                setConfirmData={setConfirmData}
+                onSubmit={onSubmit}
+              />
+            )}
+            {session.user.role === "user" &&
+            session.user.createdComic.length >= 5 ? (
+              <div className="flex justify-center my-5">
+                <h1 className="text-2xl font-bold">
+                  You have reached the maximum number of comics you can create
+                </h1>
+              </div>
+            ) : (
+              <div className="mx-auto grid grid-cols-1 gap-4 mt-5">
+                <Link href="/follows/drafts/newDrafts">
+                  <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
+                    <h1 className="py-5">+ New Comic</h1>
+                  </div>
+                </Link>
+                <Link href="/follows/drafts/illustration">
+                  <div className="transition bg-zinc-700 rounded-md hover:border-cyan-500 border-zinc-600 cursor-pointer text-center border-2 border-dashed">
+                    <h1 className="py-5">+ New Illustration</h1>
+                  </div>
+                </Link>
+              </div>
+            )}
+            {drafts.length === 0 ? (
+              <div className="flex justify-center my-5">
+                <h1 className="text-2xl font-bold">Empty Drafts</h1>
+              </div>
+            ) : (
+              <div className="mt-5 ">
+                {/* <select className="bg-zinc-700">
                 {selectionValue.map((value, index) => (
                   <option key={index} value={value}>
                     {value}
                   </option>
                 ))}
               </select> */}
-              <div className="my-2">
-                {drafts.map((comic, index) => (
-                  <div className=" bg-zinc-900 my-2 rounded-md cursor-pointer lg:flex w-full hover:bg-slate-800">
-                    <Card
-                      key={index}
-                      comic={comic}
-                      index={index}
-                      bg="bg-zinc-800"
-                    />
-                    <div className="flex flex-col">
-                      <Link
-                        href={`/follows/drafts/${
-                          comic.type === "comic" ? "editComic" : "editIllust"
-                        }/${comic.slug}`}
-                      >
-                        <button className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-bold mx-auto py-2 px-4 rounded lg:mx-2 my-2 flex">
-                          Edit{" "}
+                <div className="my-2">
+                  {drafts.map((comic, index) => (
+                    <div className=" bg-zinc-900 my-2 rounded-md cursor-pointer lg:flex w-full hover:bg-slate-800">
+                      <Card
+                        key={index}
+                        comic={comic}
+                        index={index}
+                        bg="bg-zinc-800"
+                      />
+                      <div className="flex flex-col">
+                        <Link
+                          href={`/follows/drafts/${
+                            comic.type === "comic" ? "editComic" : "editIllust"
+                          }/${comic.slug}`}
+                        >
+                          <button className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-bold mx-auto py-2 px-4 rounded lg:mx-2 my-2 flex">
+                            Edit{" "}
+                            {comic.type === "comic" ? "Comic" : "Illustration"}
+                          </button>
+                        </Link>
+                        <Link href={`/follows/drafts/chapters/${comic.id}`}>
+                          <button
+                            className={`bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold mx-auto py-2 px-4 rounded lg:mx-2 my-2 flex ${
+                              comic.type === "comic" ? "" : "hidden"
+                            }`}
+                          >
+                            Edit Chapters
+                          </button>
+                        </Link>
+
+                        <button
+                          onClick={() => delComic(comic)}
+                          className="bg-red-500 hover:bg-red-600 text-white text-sm font-bold mx-auto py-1 px-4 rounded lg:mx-2 my-2 flex"
+                        >
+                          Delete{" "}
                           {comic.type === "comic" ? "Comic" : "Illustration"}
                         </button>
-                      </Link>
-                      <Link href={`/follows/drafts/chapters/${comic.id}`}>
-                        <button
-                          className={`bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-bold mx-auto py-2 px-4 rounded lg:mx-2 my-2 flex ${
-                            comic.type === "comic" ? "" : "hidden"
-                          }`}
-                        >
-                          Edit Chapters
-                        </button>
-                      </Link>
-
-                      <button
-                        onClick={() => delComic(comic)}
-                        className="bg-red-500 hover:bg-red-600 text-white text-sm font-bold mx-auto py-1 px-4 rounded lg:mx-2 my-2 flex"
-                      >
-                        Delete{" "}
-                        {comic.type === "comic" ? "Comic" : "Illustration"}
-                      </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </>
-      );
+            )}
+          </>
+        );
+      } else {
+        return <UnauthorizedPage />;
+      }
     } else {
       return <UnauthorizedPage />;
     }

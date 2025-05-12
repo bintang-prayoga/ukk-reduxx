@@ -19,6 +19,7 @@ import Link from "next/link";
 import Image from "next/image";
 import getSelected from "../../api/Comic/getSelected";
 import getRelated from "../../api/Comic/getRelated";
+import PaidPage from "../../../Components/PaidPage";
 
 export async function getServerSideProps(context) {
   const comic = await getSelected(context);
@@ -426,170 +427,69 @@ export default function SingleComic({ comic, relatedComic, comicRating }) {
     limitRelated();
   }, []);
 
-  if (comic.type === "comic") {
-    return (
-      <>
-        <ModalComp modalData={modalData} setModalData={setModalData} />
-        <div className="">
-          <div
-            className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense`}
-          >
-            <div className="mx-auto">
-              <Image
-                width={336}
-                height={496}
-                src={comic.coverArt}
-                className="rounded shadow-md max-w-[21rem] max-h-[31rem]"
-                priority={true}
-              />
-            </div>
-            <div className="flex flex-col gap-4 px-5 col-span-2">
-              <div className="mt-2">
-                <h1 className="text-5xl font-bold">{comic.title}</h1>
-                <p className="text-lg font-medium my-4">
-                  {comic.author === comic.artist
-                    ? comic.author
-                    : `${comic.author}, ${comic.artist}`}
-                </p>
-                <div className="flex">
-                  <p className="flex bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1">
-                    <span
-                      className={`animate-ping absolute inline-flex h-3 w-3 mr-2 my-0.5 rounded-full ${statusStyle} opacity-75`}
-                    ></span>
-                    <span
-                      className={`relative inline-flex rounded-full h-3 w-3 my-auto mr-2 ${statusStyle}`}
-                    ></span>
-                    {comic.status}
+  if (session?.user?.role === "paid" || session?.user?.role === "super") {
+    if (comic.type === "comic") {
+      return (
+        <>
+          <ModalComp modalData={modalData} setModalData={setModalData} />
+          <div className="">
+            <div
+              className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense`}
+            >
+              <div className="mx-auto">
+                <Image
+                  width={336}
+                  height={496}
+                  src={comic.coverArt}
+                  className="rounded shadow-md max-w-[21rem] max-h-[31rem]"
+                  priority={true}
+                />
+              </div>
+              <div className="flex flex-col gap-4 px-5 col-span-2">
+                <div className="mt-2">
+                  <h1 className="text-5xl font-bold">{comic.title}</h1>
+                  <p className="text-lg font-medium my-4">
+                    {comic.author === comic.artist
+                      ? comic.author
+                      : `${comic.author}, ${comic.artist}`}
                   </p>
                   <div className="flex">
-                    <FaRegBookmark className="my-auto" />
-                    <p>{comic.bookmarks.length}</p>
-                    <div className="mx-1"></div>
-                    <FaRegStar className="my-auto" />
-                    <p className="mx-1">
-                      {comicRating.toString().substring(0, 3)}
-                      <span className="mx-1 text-gray-400 text-xs">
-                        ({comic.ratings.length})
-                      </span>
+                    <p className="flex bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1">
+                      <span
+                        className={`animate-ping absolute inline-flex h-3 w-3 mr-2 my-0.5 rounded-full ${statusStyle} opacity-75`}
+                      ></span>
+                      <span
+                        className={`relative inline-flex rounded-full h-3 w-3 my-auto mr-2 ${statusStyle}`}
+                      ></span>
+                      {comic.status}
                     </p>
+                    <div className="flex">
+                      <FaRegBookmark className="my-auto" />
+                      <p>{comic.bookmarks.length}</p>
+                      <div className="mx-1"></div>
+                      <FaRegStar className="my-auto" />
+                      <p className="mx-1">
+                        {comicRating.toString().substring(0, 3)}
+                        <span className="mx-1 text-gray-400 text-xs">
+                          ({comic.ratings.length})
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="flex flex-wrap gap-1">
-                {comic.genres.map((genre, index) => (
-                  <p
-                    className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1"
-                    key={index}
-                  >
-                    {genre.name}
-                  </p>
-                ))}
-              </div>
-
-              <ReadMore text={comic.synopsis} sliced="200" />
-
-              <div className="mt-5 flex gap-2">
-                <BookmarkBtn
-                  session={session}
-                  comic={comic}
-                  addBookmark={addBookmark}
-                  removeBookmark={removeBookmark}
-                />
-                <CommentBtn session={session} comic={comic} />
-                <RatingBtn
-                  session={session}
-                  comic={comic}
-                  addRating={addRating}
-                  updateRating={updateRating}
-                  register={register}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense mt-10`}
-        >
-          <div className="flex flex-col gap-4 px-5 col-span-2">
-            <div className="flex flex-row justify-between">
-              <h1 className="tracking-widest font-semibold text-xl mx-0 lg:mx-5">
-                CHAPTER LIST
-              </h1>
-            </div>
-            <ShowChapter session={session} comic={comic} />
-          </div>
-          <div className="flex flex-col gap-4 mx-5">
-            <div className="max-w-sm p-6 bg-slate-600 border border-cyan-500 rounded-lg shadow-md my-3 mx-auto lg:my-0">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-200">
-                Similar comic
-              </h5>
-              <div className="mb-3">
-                {related.map((comic, index) => (
-                  <Link href={`/titles/${comic.slug}`} key={index}>
-                    <div className="flex gap-2 my-2 cursor-pointer">
-                      <img
-                        src={comic.coverArt}
-                        className="rounded shadow-md max-w-[4rem] max-h-[5rem]"
-                      />
-                      <div className="">
-                        <h1 className="text-sm font-semibold">{comic.title}</h1>
-                        <div className=" mt-4 flex">
-                          <FiUser className="my-auto" />
-                          {comic.author === comic.artist ? (
-                            <p className="mx-2">{comic.author}</p>
-                          ) : (
-                            `${comic.author}, ${comic.artist}`
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  } else if (comic.type === "illustration") {
-    return (
-      <>
-        <ModalComp modalData={modalData} setModalData={setModalData} />
-        <div className="">
-          <div className="w-full max-w-4xl mx-auto px-4">
-            <div className="relative w-full" style={{ aspectRatio: "16 / 9" }}>
-              <Image
-                src={comic.coverArt}
-                alt={comic.title}
-                layout="fill"
-                objectFit="contain"
-                className="rounded-md"
-                priority
-              />
-            </div>
-          </div>
-          <div
-            className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense`}
-          >
-            <div className="flex flex-col gap-4 px-5 col-span-2">
-              <div className="mt-5">
-                <h1 className="text-5xl font-bold">{comic.title}</h1>
-
-                <div className="flex mt-2">
-                  <FaRegBookmark className="my-auto" />
-                  <p>{comic.bookmarks.length}</p>
-                  <div className="mx-1"></div>
-                  <FaRegStar className="my-auto" />
-                  <p className="mx-1">
-                    {comicRating.toString().substring(0, 3)}
-                    <span className="mx-1 text-gray-400 text-xs">
-                      ({comic.ratings.length})
-                    </span>
-                  </p>
+                <div className="flex flex-wrap gap-1">
+                  {comic.genres.map((genre, index) => (
+                    <p
+                      className="bg-zinc-900 rounded-md text-center font-semibold text-xs md:text-md px-2 py-1 uppercase mx-1"
+                      key={index}
+                    >
+                      {genre.name}
+                    </p>
+                  ))}
                 </div>
-              </div>
-              <div className="flex justify-between">
+
+                <ReadMore text={comic.synopsis} sliced="200" />
+
                 <div className="mt-5 flex gap-2">
                   <BookmarkBtn
                     session={session}
@@ -609,9 +509,119 @@ export default function SingleComic({ comic, relatedComic, comicRating }) {
               </div>
             </div>
           </div>
-        </div>
-      </>
-    );
+
+          <div
+            className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense mt-10`}
+          >
+            <div className="flex flex-col gap-4 px-5 col-span-2">
+              <div className="flex flex-row justify-between">
+                <h1 className="tracking-widest font-semibold text-xl mx-0 lg:mx-5">
+                  CHAPTER LIST
+                </h1>
+              </div>
+              <ShowChapter session={session} comic={comic} />
+            </div>
+            <div className="flex flex-col gap-4 mx-5">
+              <div className="max-w-sm p-6 bg-slate-600 border border-cyan-500 rounded-lg shadow-md my-3 mx-auto lg:my-0">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-200">
+                  Similar comic
+                </h5>
+                <div className="mb-3">
+                  {related.map((comic, index) => (
+                    <Link href={`/titles/${comic.slug}`} key={index}>
+                      <div className="flex gap-2 my-2 cursor-pointer">
+                        <img
+                          src={comic.coverArt}
+                          className="rounded shadow-md max-w-[4rem] max-h-[5rem]"
+                        />
+                        <div className="">
+                          <h1 className="text-sm font-semibold">
+                            {comic.title}
+                          </h1>
+                          <div className=" mt-4 flex">
+                            <FiUser className="my-auto" />
+                            {comic.author === comic.artist ? (
+                              <p className="mx-2">{comic.author}</p>
+                            ) : (
+                              `${comic.author}, ${comic.artist}`
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    } else if (comic.type === "illustration") {
+      return (
+        <>
+          <ModalComp modalData={modalData} setModalData={setModalData} />
+          <div className="">
+            <div className="w-full max-w-4xl mx-auto px-4">
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: "16 / 9" }}
+              >
+                <Image
+                  src={comic.coverArt}
+                  alt={comic.title}
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-md"
+                  priority
+                />
+              </div>
+            </div>
+            <div
+              className={`grid grid-cols-1 lg:grid-cols-3 grid-flow-row-dense`}
+            >
+              <div className="flex flex-col gap-4 px-5 col-span-2">
+                <div className="mt-5">
+                  <h1 className="text-5xl font-bold">{comic.title}</h1>
+
+                  <div className="flex mt-2">
+                    <FaRegBookmark className="my-auto" />
+                    <p>{comic.bookmarks.length}</p>
+                    <div className="mx-1"></div>
+                    <FaRegStar className="my-auto" />
+                    <p className="mx-1">
+                      {comicRating.toString().substring(0, 3)}
+                      <span className="mx-1 text-gray-400 text-xs">
+                        ({comic.ratings.length})
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="mt-5 flex gap-2">
+                    <BookmarkBtn
+                      session={session}
+                      comic={comic}
+                      addBookmark={addBookmark}
+                      removeBookmark={removeBookmark}
+                    />
+                    <CommentBtn session={session} comic={comic} />
+                    <RatingBtn
+                      session={session}
+                      comic={comic}
+                      addRating={addRating}
+                      updateRating={updateRating}
+                      register={register}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+  } else {
+    return <PaidPage />;
   }
 }
 

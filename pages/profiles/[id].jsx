@@ -70,11 +70,6 @@ function ProfilesPage() {
                 <FaSignOutAlt className="my-2" />
               </button>
             </div>
-            <div className="flex flex-col gap-3">
-              <button className="bg-cyan-500 text-black px-5 py-2 rounded-full mt-5">
-                Manage Subscriptions
-              </button>
-            </div>
           </div>
         </>
       );

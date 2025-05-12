@@ -1,49 +1,114 @@
 import { useSession } from "next-auth/react";
-import { UnauthorizedPage, Trakteer } from "../../../Components";
+import { UnauthorizedPage, TableComp, Trakteer } from "../../../Components";
 import UserLayout from "../../Layout/UserLayout";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { createColumnHelper } from "@tanstack/react-table";
+import moment from "moment";
+import Link from "next/link";
+import getOneSubscription from "../../api/User/getOneSubscription";
 
-function SubscriptionsPage() {
-  const [payhistory, setPayHistory] = useState([]);
-  const { data: session, status } = useSession();
+export async function getServerSideProps(context) {
+  const subscription = await getOneSubscription(context);
+
+  return {
+    props: {
+      subscription: subscription || null,
+    },
+  };
+}
+
+function SubscriptionsPage({ subscription }) {
+  const { data: session } = useSession();
   const router = useRouter();
+  const columnHelper = createColumnHelper();
 
-  useEffect(() => {
-    getHistory();
-  }, []);
-
-  async function getHistory(params) {
-    try {
-      const res = await fetch(
-        "https://api.trakteer.id/v1/public/supports?limit=20&page=1",
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "X-Requested-With": "XMLHttpRequest",
-            key: process.env.TRAKTEER_KEY,
-          },
-        }
-      );
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const json = await res.json();
-      setPayHistory(json.data);
-      console.log(payhistory);
-    } catch (err) {
-      console.error(err);
+  // Memoize subscription data
+  const subscriptionData = useMemo(() => {
+    if (!subscription || subscription.length === 0) {
+      return [];
     }
-  }
+    return subscription.map((item, index) => ({
+      index: index + 1,
+      ...item,
+    }));
+  }, [subscription]);
+
+  // Define table columns
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("index", {
+        header: "Index",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("supporter_email", {
+        header: "Supporter Email",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("supporter_name", {
+        header: "Name",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("unit_name", {
+        header: "Paket",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("quantity", {
+        header: "Quantity",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("amount", {
+        header: "Amount",
+        cell: (info) => <span>{info.getValue()}</span>,
+      }),
+      columnHelper.accessor("date", {
+        header: "Date",
+        cell: (info) => (
+          <span>{moment(info.getValue()).format("YYYY-MM-DD")}</span>
+        ),
+      }),
+    ],
+    []
+  );
 
   if (session) {
     if (session.user.id === router.query.id) {
+      // Handle empty subscription
+      if (!subscription || subscription.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center h-full">
+            <Link
+              href="https://trakteer.id/BoedTrial/tip/embed/modal"
+              className="text-blue-500 mt-4"
+            >
+              <button className="bg-cyan-500 text-white px-4 py-2 rounded-md">
+                Support Me on Trakteer!
+              </button>
+            </Link>
+            <h1 className="text-lg font-bold my-5">
+              You haven't made any transactions
+            </h1>
+          </div>
+        );
+      }
+
+      // Render subscription table if data exists
       return (
         <div className="flex flex-col items-center justify-center h-full">
+          {/* <Link
+            href="https://trakteer.id/BoedTrial/tip/embed/modal"
+            className="text-blue-500 mt-4"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <button className="bg-cyan-500 text-white px-4 py-2 rounded-md">
+              Support Me on Trakteer!
+            </button>
+          </Link> */}
           <Trakteer />
           <div className="mt-4">
             <h1 className="text-lg font-bold">Riwayat Subscription</h1>
+            <TableComp data={subscriptionData} columns={columns} />
           </div>
         </div>
       );

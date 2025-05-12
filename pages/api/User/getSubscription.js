@@ -1,7 +1,7 @@
 export default async function getSubscription() {
   try {
     const res = await fetch(
-      "https://api.trakteer.id/v1/public/supports?limit=20&page=1&include=supporter_email",
+      "https://api.trakteer.id/v1/public/supports?limit=20&page=1&include=order_id,supporter_email",
       {
         method: "GET",
         headers: {

@@ -44,6 +44,20 @@ export function DisplayManage({ router, activeNav, defaultNav, session }) {
             <span>Users</span>
           </li>
         </Link>
+        <Link href={`/follows/drafts/${session.user.id}`}>
+          <li
+            className={`
+                      ${
+                        router.pathname === `/follows/drafts/[user]`
+                          ? activeNav
+                          : defaultNav
+                      } cursor-pointer
+                    `}
+          >
+            <MdEditNote className="mr-2 text-2xl" />
+            <span>Drafts</span>
+          </li>
+        </Link>
         <Link href="/admin/payment">
           <li
             className={`
@@ -245,20 +259,6 @@ function Routes({ sidenav, setSideNav, session }) {
                       >
                         <FaDollarSign className="mr-4" />
                         <span>Subscription</span>
-                      </li>
-                    </Link>
-                    <Link href={`/follows/drafts/${session.user.id}`}>
-                      <li
-                        className={`
-                      ${
-                        router.pathname === `/follows/drafts/[user]`
-                          ? activeNav
-                          : defaultNav
-                      } cursor-pointer
-                    `}
-                      >
-                        <MdEditNote className="mr-2 text-2xl" />
-                        <span>Drafts</span>
                       </li>
                     </Link>
 
